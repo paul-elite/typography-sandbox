@@ -84,7 +84,8 @@ export function PreviewModes({
             value={customText}
             onChange={(e) => onCustomTextChange(e.target.value)}
             placeholder="Enter your custom text here..."
-            className="w-full h-24 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-900 placeholder-zinc-400 resize-none outline-none focus:border-transparent focus:shadow-[0_0_0_0.5px_#3b82f6]"
+            className="w-full h-24 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-900 placeholder-zinc-400 resize-none outline-none focus:outline-none focus:border-transparent focus:shadow-[0_0_0_0.5px_#3b82f6]"
+            style={{ outline: 'none' }}
           />
         </div>
       )}
