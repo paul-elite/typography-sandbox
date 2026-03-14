@@ -4,13 +4,14 @@ import { TypographyState, DEFAULT_TYPOGRAPHY, TEXT_ALIGNMENTS } from '../../type
 import { Slider } from '../ui/Slider';
 import { FontSelector } from '../FontSelector/FontSelector';
 import { FontOption } from '../../types/typography';
-import { TypographyRecommendations } from '../../hooks/useRecommendations';
+import { TypographyRecommendations, ActiveSlider } from '../../hooks/useRecommendations';
 
 interface TypographyControlsProps {
   typography: TypographyState;
   recommendations: TypographyRecommendations;
   onUpdate: <K extends keyof TypographyState>(key: K, value: TypographyState[K]) => void;
   onResetAll: () => void;
+  onActiveSliderChange: (slider: ActiveSlider) => void;
   fonts: FontOption[];
   loadFont: (font: string) => void;
   loadingFont: string | null;
@@ -23,6 +24,7 @@ export function TypographyControls({
   recommendations,
   onUpdate,
   onResetAll,
+  onActiveSliderChange,
   fonts,
   loadFont,
   loadingFont,
@@ -90,6 +92,8 @@ export function TypographyControls({
           defaultValue={DEFAULT_TYPOGRAPHY.fontSize}
           recommendedValue={recommendations.fontSize}
           onApplyRecommended={() => onUpdate('fontSize', recommendations.fontSize)}
+          onSlideStart={() => onActiveSliderChange('fontSize')}
+          onSlideEnd={() => onActiveSliderChange(null)}
         />
 
         {/* Letter Spacing (Tracking) */}
@@ -104,6 +108,8 @@ export function TypographyControls({
           defaultValue={DEFAULT_TYPOGRAPHY.letterSpacing}
           recommendedValue={recommendations.letterSpacing}
           onApplyRecommended={() => onUpdate('letterSpacing', recommendations.letterSpacing)}
+          onSlideStart={() => onActiveSliderChange('letterSpacing')}
+          onSlideEnd={() => onActiveSliderChange(null)}
           formatValue={(v) => v.toFixed(2)}
         />
 
@@ -119,6 +125,8 @@ export function TypographyControls({
           defaultValue={DEFAULT_TYPOGRAPHY.wordSpacing}
           recommendedValue={recommendations.wordSpacing}
           onApplyRecommended={() => onUpdate('wordSpacing', recommendations.wordSpacing)}
+          onSlideStart={() => onActiveSliderChange('wordSpacing')}
+          onSlideEnd={() => onActiveSliderChange(null)}
           formatValue={(v) => v.toFixed(2)}
         />
 
@@ -133,6 +141,8 @@ export function TypographyControls({
           defaultValue={DEFAULT_TYPOGRAPHY.lineHeight}
           recommendedValue={recommendations.lineHeight}
           onApplyRecommended={() => onUpdate('lineHeight', recommendations.lineHeight)}
+          onSlideStart={() => onActiveSliderChange('lineHeight')}
+          onSlideEnd={() => onActiveSliderChange(null)}
           formatValue={(v) => v.toFixed(2)}
         />
 
@@ -148,6 +158,8 @@ export function TypographyControls({
           defaultValue={DEFAULT_TYPOGRAPHY.paragraphWidth}
           recommendedValue={recommendations.paragraphWidth}
           onApplyRecommended={() => onUpdate('paragraphWidth', recommendations.paragraphWidth)}
+          onSlideStart={() => onActiveSliderChange('paragraphWidth')}
+          onSlideEnd={() => onActiveSliderChange(null)}
         />
 
         {/* Text Alignment */}

@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { useTypography } from './hooks/useTypography';
 import { useFontLoader } from './hooks/useFontLoader';
-import { useRecommendations } from './hooks/useRecommendations';
+import { useRecommendations, ActiveSlider } from './hooks/useRecommendations';
 import {
   TypographyCanvas,
   TypographyControls,
@@ -12,6 +13,8 @@ import {
 } from './components';
 
 export default function Home() {
+  const [activeSlider, setActiveSlider] = useState<ActiveSlider>(null);
+
   const {
     typography,
     updateTypography,
@@ -37,7 +40,7 @@ export default function Home() {
     getFontWeights,
   } = useFontLoader();
 
-  const recommendations = useRecommendations(typography);
+  const recommendations = useRecommendations(typography, activeSlider);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
@@ -76,6 +79,7 @@ export default function Home() {
               recommendations={recommendations}
               onUpdate={updateTypography}
               onResetAll={resetTypography}
+              onActiveSliderChange={setActiveSlider}
               fonts={fonts}
               loadFont={loadFont}
               loadingFont={loadingFont}

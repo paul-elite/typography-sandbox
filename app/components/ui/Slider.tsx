@@ -14,6 +14,8 @@ interface SliderProps {
   recommendedValue?: number;
   formatValue?: (value: number) => string;
   onApplyRecommended?: () => void;
+  onSlideStart?: () => void;
+  onSlideEnd?: () => void;
 }
 
 export function Slider({
@@ -28,6 +30,8 @@ export function Slider({
   recommendedValue,
   formatValue,
   onApplyRecommended,
+  onSlideStart,
+  onSlideEnd,
 }: SliderProps) {
   const id = useId();
   const [isSliding, setIsSliding] = useState(false);
@@ -56,11 +60,13 @@ export function Slider({
 
   const handlePointerDown = useCallback(() => {
     setIsSliding(true);
-  }, []);
+    onSlideStart?.();
+  }, [onSlideStart]);
 
   const handlePointerUp = useCallback(() => {
     setIsSliding(false);
-  }, []);
+    onSlideEnd?.();
+  }, [onSlideEnd]);
 
   // Calculate percentages for slider gradient and recommended marker
   const percentage = ((value - min) / (max - min)) * 100;
@@ -72,8 +78,11 @@ export function Slider({
   }, [recommendedValue, min, max]);
 
   // Colors for active range
-  const activeColor = isSliding ? '#3b82f6' : '#a1a1aa'; // blue-500 when sliding, zinc-400 otherwise
+  const activeColor = isSliding ? '#3b82f6' : '#a1a1aa';
   const thumbBorderColor = isSliding ? '#3b82f6' : '#a1a1aa';
+
+  // Hide ghost thumb when sliding (it follows the main thumb)
+  const showGhostThumb = recommendedPercentage !== null && !isAtRecommended && !isSliding;
 
   return (
     <div className="space-y-2">
@@ -97,9 +106,9 @@ export function Slider({
           </div>
           <button
             onClick={onApplyRecommended}
-            disabled={isAtRecommended || recommendedValue === undefined}
+            disabled={isAtRecommended || recommendedValue === undefined || isSliding}
             className={`p-1 rounded transition-colors ${
-              isAtRecommended || recommendedValue === undefined
+              isAtRecommended || recommendedValue === undefined || isSliding
                 ? 'text-zinc-600 cursor-not-allowed'
                 : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700'
             }`}
@@ -128,10 +137,10 @@ export function Slider({
       {/* Slider track with ghost recommended thumb */}
       <div className="relative h-4 flex items-center">
         {/* Ghost thumb for recommended value */}
-        {recommendedPercentage !== null && !isAtRecommended && (
+        {showGhostThumb && (
           <button
             onClick={onApplyRecommended}
-            className="absolute top-1/2 -translate-y-1/2 z-[5] cursor-pointer group"
+            className="absolute top-1/2 -translate-y-1/2 z-[5] cursor-pointer group transition-all duration-200"
             style={{ left: `calc(${recommendedPercentage}% - 7px)` }}
             title={`Click to apply recommended value`}
             aria-label={`Apply recommended value`}
