@@ -127,8 +127,7 @@ export default function Home() {
       <footer className="border-t border-zinc-200 mt-12 bg-white">
         <div className="max-w-[1800px] mx-auto px-6 py-4">
           <p className="text-xs text-zinc-500 text-center">
-            Typography Sandbox — A tool for experimenting with typography variables.
-            Built with Next.js, Tailwind CSS, and TypeScript.
+            Design Tales © 2026
           </p>
         </div>
       </footer>
