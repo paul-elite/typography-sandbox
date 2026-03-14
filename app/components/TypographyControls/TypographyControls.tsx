@@ -5,7 +5,10 @@ import { Slider } from '../ui/Slider';
 import { FontSelector } from '../FontSelector/FontSelector';
 import { FontOption } from '../../types/typography';
 import { TypographyRecommendations, ActiveSlider } from '../../hooks/useRecommendations';
-import { AlignLeftLine, AlignCenterLine, AlignRightLine, AlignJustifyLine } from '@mingcute/react';
+import {
+  AlignLeftLine, AlignCenterLine, AlignRightLine, AlignJustifyLine,
+  AlignLeftFill, AlignCenterFill, AlignRightFill, AlignJustifyFill
+} from '@mingcute/react';
 
 interface TypographyControlsProps {
   typography: TypographyState;
@@ -69,11 +72,10 @@ export function TypographyControls({
               <button
                 key={weight}
                 onClick={() => onUpdate('fontWeight', weight)}
-                className={`px-2.5 py-1.5 text-xs rounded-md transition-colors ${
-                  typography.fontWeight === weight
+                className={`px-2.5 py-1.5 text-xs rounded-md transition-colors ${typography.fontWeight === weight
                     ? 'bg-zinc-900 text-white font-medium'
                     : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
-                }`}
+                  }`}
               >
                 {weight}
               </button>
@@ -174,16 +176,15 @@ export function TypographyControls({
                 key={alignment.value}
                 onClick={() => onUpdate('textAlign', alignment.value)}
                 title={alignment.label}
-                className={`flex-1 py-2 text-lg rounded-md transition-colors ${
-                  typography.textAlign === alignment.value
+                className={`flex-1 py-2 text-lg rounded-md transition-colors ${typography.textAlign === alignment.value
                     ? 'bg-zinc-900 text-white'
                     : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
-                }`}
+                  }`}
               >
-                {alignment.value === 'left' && <AlignLeftLine className="mx-auto" />}
-                {alignment.value === 'center' && <AlignCenterLine className="mx-auto" />}
-                {alignment.value === 'right' && <AlignRightLine className="mx-auto" />}
-                {alignment.value === 'justify' && <AlignJustifyLine className="mx-auto" />}
+                {alignment.value === 'left' && (typography.textAlign === 'left' ? <AlignLeftFill className="mx-auto" /> : <AlignLeftLine className="mx-auto" />)}
+                {alignment.value === 'center' && (typography.textAlign === 'center' ? <AlignCenterFill className="mx-auto" /> : <AlignCenterLine className="mx-auto" />)}
+                {alignment.value === 'right' && (typography.textAlign === 'right' ? <AlignRightFill className="mx-auto" /> : <AlignRightLine className="mx-auto" />)}
+                {alignment.value === 'justify' && (typography.textAlign === 'justify' ? <AlignJustifyFill className="mx-auto" /> : <AlignJustifyLine className="mx-auto" />)}
               </button>
             ))}
           </div>
