@@ -261,7 +261,7 @@ export function TypographyCanvas({
         onClick={handleCanvasClick}
       >
         <div
-          className="rounded-lg shadow-lg transition-all duration-300 overflow-hidden border"
+          className="rounded-lg transition-all duration-300 overflow-hidden border shadow-[4px_4px_0px_rgba(0,0,0,0.08)]"
           style={{ 
             width: `min(100%, ${viewportWidth}px)`,
             borderColor: layout.strokeColor || '#FBD152'
