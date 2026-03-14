@@ -55,10 +55,6 @@ export default function Home() {
               alt="Design Tales Logo"
               className="h-10 w-auto object-contain"
             />
-            <div>
-              <h1 className="text-lg font-semibold text-zinc-900">Typography Sandbox</h1>
-              <p className="text-xs text-zinc-500">Experiment with typography variables in real-time</p>
-            </div>
           </div>
           <button
             onClick={() => setIsExportOpen(true)}
