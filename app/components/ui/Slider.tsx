@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useId, useState } from 'react';
+import { useCallback, useId, useMemo, useState } from 'react';
 
 interface SliderProps {
   label: string;
@@ -11,7 +11,7 @@ interface SliderProps {
   unit?: string;
   onChange: (value: number) => void;
   defaultValue?: number;
-  recommendedValue?: number;
+  recommendedValue?: [number, number];
   formatValue?: (value: number) => string;
   onApplyRecommended?: () => void;
   onSlideStart?: () => void;
@@ -36,7 +36,7 @@ export function Slider({
   const id = useId();
   const [isSliding, setIsSliding] = useState(false);
   const displayValue = formatValue ? formatValue(value) : value.toString();
-  const isAtRecommended = recommendedValue !== undefined && Math.abs(value - recommendedValue) < step;
+  const isAtRecommended = recommendedValue !== undefined && value >= recommendedValue[0] && value <= recommendedValue[1];
 
   const handleSliderChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(parseFloat(e.target.value));
@@ -71,9 +71,16 @@ export function Slider({
   // Calculate percentages for slider gradient safely bound
   const percentage = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100)) || 0;
 
-  // Colors for active range
-  const activeColor = '#3b82f6';
-  const trackBgColor = '#e4e4e7';
+  const recommendedZone = useMemo(() => {
+    if (recommendedValue === undefined) return null;
+    const clampedMin = Math.max(min, Math.min(max, recommendedValue[0]));
+    const clampedMax = Math.max(min, Math.min(max, recommendedValue[1]));
+
+    return {
+      start: ((clampedMin - min) / (max - min)) * 100,
+      end: ((clampedMax - min) / (max - min)) * 100
+    };
+  }, [recommendedValue, min, max]);
 
   return (
     <div className="space-y-2">
@@ -125,8 +132,28 @@ export function Slider({
         </div>
       </div>
 
-      {/* Slider track with gradient logic */}
-      <div className="relative h-4 flex items-center">
+      {/* Slider track container */}
+      <div className="relative h-4 flex items-center group">
+
+        {/* Base Track (Background) */}
+        <div className="absolute w-full h-1.5 rounded-full bg-zinc-200" />
+
+        {/* Active Value Trace (Black) */}
+        <div
+          className="absolute h-1.5 rounded-full bg-black z-10"
+          style={{ width: `${percentage}%` }}
+        />
+
+        {/* Recommended Spectrum Zone (Blue overlay top) */}
+        {recommendedZone && (
+          <div
+            className="absolute h-1.5 rounded-full bg-blue-500 bg-opacity-80 mix-blend-multiply z-20 pointer-events-none transition-all duration-200"
+            style={{
+              left: `${recommendedZone.start}%`,
+              width: `${Math.max(0, recommendedZone.end - recommendedZone.start)}%`
+            }}
+          />
+        )}
 
         <input
           id={id}
@@ -140,11 +167,8 @@ export function Slider({
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          className={`w-full h-1.5 rounded-full appearance-none cursor-pointer relative z-10 transition-all duration-150 ${isSliding ? 'slider-track-active' : 'slider-track'
+          className={`w-full h-1.5 rounded-full appearance-none cursor-pointer relative z-30 transition-all duration-150 bg-transparent ${isSliding ? 'slider-track-active' : 'slider-track'
             }`}
-          style={{
-            background: `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${percentage}%, ${trackBgColor} ${percentage}%, ${trackBgColor} 100%)`,
-          }}
         />
       </div>
 

@@ -4,11 +4,11 @@ import { useMemo } from 'react';
 import { TypographyState } from '../types/typography';
 
 export interface TypographyRecommendations {
-  fontSize: number;
-  letterSpacing: number;
-  wordSpacing: number;
-  lineHeight: number;
-  paragraphWidth: number;
+  fontSize: [number, number];
+  letterSpacing: [number, number];
+  wordSpacing: [number, number];
+  lineHeight: [number, number];
+  paragraphWidth: [number, number];
 }
 
 export type ActiveSlider = keyof TypographyRecommendations | null;
@@ -192,11 +192,26 @@ export function useRecommendations(
     }
 
     return {
-      fontSize: recommendedFontSize,
-      letterSpacing: Math.round(recommendedLetterSpacing * 100) / 100,
-      wordSpacing: Math.round(recommendedWordSpacing * 100) / 100,
-      lineHeight: Math.round(recommendedLineHeight * 100) / 100,
-      paragraphWidth: Math.round(recommendedParagraphWidth),
+      fontSize: [
+        Math.max(8, recommendedFontSize - 2),
+        Math.min(120, recommendedFontSize + 2)
+      ],
+      letterSpacing: [
+        Math.max(-0.2, Math.round((recommendedLetterSpacing - 0.01) * 100) / 100),
+        Math.min(0.5, Math.round((recommendedLetterSpacing + 0.01) * 100) / 100)
+      ],
+      wordSpacing: [
+        Math.max(-0.2, Math.round((recommendedWordSpacing - 0.02) * 100) / 100),
+        Math.min(1, Math.round((recommendedWordSpacing + 0.02) * 100) / 100)
+      ],
+      lineHeight: [
+        Math.max(0.8, Math.round((recommendedLineHeight - 0.1) * 100) / 100),
+        Math.min(3, Math.round((recommendedLineHeight + 0.1) * 100) / 100)
+      ],
+      paragraphWidth: [
+        Math.max(20, Math.round(recommendedParagraphWidth - 5)),
+        Math.min(120, Math.round(recommendedParagraphWidth + 5))
+      ],
     };
   }, [typography, activeSlider]);
 }
