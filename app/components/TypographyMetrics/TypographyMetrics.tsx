@@ -72,16 +72,26 @@ export function TypographyMetrics({
         </div>
 
         {/* Segmented squares */}
-        <div className="flex gap-1.5">
-          {COMFORT_COLORS.map((color, index) => (
-            <div
-              key={color.hex}
-              className="flex-1 h-6 rounded transition-all duration-300"
-              style={{
-                backgroundColor: index <= activeSegment ? color.hex : '#e4e4e7',
-              }}
-            />
-          ))}
+        <div className="flex gap-0.5">
+          {COMFORT_COLORS.map((color, index) => {
+            const isFirst = index === 0;
+            const isLast = index === COMFORT_COLORS.length - 1;
+
+            return (
+              <div
+                key={color.hex}
+                className="flex-1 h-6 transition-all duration-300"
+                style={{
+                  backgroundColor: index <= activeSegment ? color.hex : '#e4e4e7',
+                  borderRadius: isFirst
+                    ? '6px 0 0 6px'
+                    : isLast
+                    ? '0 6px 6px 0'
+                    : '0',
+                }}
+              />
+            );
+          })}
         </div>
 
         <div className="flex justify-between mt-1.5">
