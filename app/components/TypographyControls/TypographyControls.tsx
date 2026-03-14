@@ -10,7 +10,6 @@ interface TypographyControlsProps {
   typography: TypographyState;
   recommendations: TypographyRecommendations;
   onUpdate: <K extends keyof TypographyState>(key: K, value: TypographyState[K]) => void;
-  onResetValue: <K extends keyof TypographyState>(key: K) => void;
   onResetAll: () => void;
   fonts: FontOption[];
   loadFont: (font: string) => void;
@@ -23,7 +22,6 @@ export function TypographyControls({
   typography,
   recommendations,
   onUpdate,
-  onResetValue,
   onResetAll,
   fonts,
   loadFont,
@@ -89,7 +87,6 @@ export function TypographyControls({
           step={1}
           unit="px"
           onChange={(value) => onUpdate('fontSize', value)}
-          onReset={() => onResetValue('fontSize')}
           defaultValue={DEFAULT_TYPOGRAPHY.fontSize}
           recommendedValue={recommendations.fontSize}
           onApplyRecommended={() => onUpdate('fontSize', recommendations.fontSize)}
@@ -104,7 +101,6 @@ export function TypographyControls({
           step={0.01}
           unit="em"
           onChange={(value) => onUpdate('letterSpacing', value)}
-          onReset={() => onResetValue('letterSpacing')}
           defaultValue={DEFAULT_TYPOGRAPHY.letterSpacing}
           recommendedValue={recommendations.letterSpacing}
           onApplyRecommended={() => onUpdate('letterSpacing', recommendations.letterSpacing)}
@@ -120,7 +116,6 @@ export function TypographyControls({
           step={0.01}
           unit="em"
           onChange={(value) => onUpdate('wordSpacing', value)}
-          onReset={() => onResetValue('wordSpacing')}
           defaultValue={DEFAULT_TYPOGRAPHY.wordSpacing}
           recommendedValue={recommendations.wordSpacing}
           onApplyRecommended={() => onUpdate('wordSpacing', recommendations.wordSpacing)}
@@ -135,7 +130,6 @@ export function TypographyControls({
           max={3}
           step={0.05}
           onChange={(value) => onUpdate('lineHeight', value)}
-          onReset={() => onResetValue('lineHeight')}
           defaultValue={DEFAULT_TYPOGRAPHY.lineHeight}
           recommendedValue={recommendations.lineHeight}
           onApplyRecommended={() => onUpdate('lineHeight', recommendations.lineHeight)}
@@ -151,7 +145,6 @@ export function TypographyControls({
           step={1}
           unit="ch"
           onChange={(value) => onUpdate('paragraphWidth', value)}
-          onReset={() => onResetValue('paragraphWidth')}
           defaultValue={DEFAULT_TYPOGRAPHY.paragraphWidth}
           recommendedValue={recommendations.paragraphWidth}
           onApplyRecommended={() => onUpdate('paragraphWidth', recommendations.paragraphWidth)}

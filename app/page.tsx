@@ -16,7 +16,6 @@ export default function Home() {
     typography,
     updateTypography,
     resetTypography,
-    resetSingleValue,
     previewMode,
     setPreviewMode,
     customText,
@@ -76,7 +75,6 @@ export default function Home() {
               typography={typography}
               recommendations={recommendations}
               onUpdate={updateTypography}
-              onResetValue={resetSingleValue}
               onResetAll={resetTypography}
               fonts={fonts}
               loadFont={loadFont}

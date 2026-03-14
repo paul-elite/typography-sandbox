@@ -10,7 +10,6 @@ interface SliderProps {
   step: number;
   unit?: string;
   onChange: (value: number) => void;
-  onReset: () => void;
   defaultValue?: number;
   recommendedValue?: number;
   formatValue?: (value: number) => string;
@@ -25,7 +24,6 @@ export function Slider({
   step,
   unit = '',
   onChange,
-  onReset,
   defaultValue,
   recommendedValue,
   formatValue,
@@ -34,7 +32,6 @@ export function Slider({
   const id = useId();
   const [isSliding, setIsSliding] = useState(false);
   const displayValue = formatValue ? formatValue(value) : value.toString();
-  const isDefault = defaultValue !== undefined && value === defaultValue;
   const isAtRecommended = recommendedValue !== undefined && Math.abs(value - recommendedValue) < step;
 
   const handleSliderChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,15 +96,15 @@ export function Slider({
             {unit && <span className="ml-1 text-xs text-zinc-500">{unit}</span>}
           </div>
           <button
-            onClick={onReset}
-            disabled={isDefault}
+            onClick={onApplyRecommended}
+            disabled={isAtRecommended || recommendedValue === undefined}
             className={`p-1 rounded transition-colors ${
-              isDefault
+              isAtRecommended || recommendedValue === undefined
                 ? 'text-zinc-600 cursor-not-allowed'
                 : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700'
             }`}
-            title="Reset to default"
-            aria-label={`Reset ${label} to default`}
+            title="Snap to recommended"
+            aria-label={`Snap ${label} to recommended value`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -120,8 +117,9 @@ export function Slider({
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-              <path d="M3 3v5h5" />
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="6" />
+              <circle cx="12" cy="12" r="2" />
             </svg>
           </button>
         </div>
