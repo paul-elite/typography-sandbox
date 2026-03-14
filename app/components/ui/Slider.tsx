@@ -147,7 +147,7 @@ export function Slider({
         {/* Recommended Spectrum Zone (Blue overlay top) */}
         {recommendedZone && (
           <div
-            className="absolute h-1.5 rounded-full bg-blue-500 bg-opacity-80 mix-blend-multiply z-20 pointer-events-none transition-all duration-200"
+            className="absolute h-1.5 rounded-full bg-blue-500 z-20 pointer-events-none transition-all duration-200"
             style={{
               left: `${recommendedZone.start}%`,
               width: `${Math.max(0, recommendedZone.end - recommendedZone.start)}%`
