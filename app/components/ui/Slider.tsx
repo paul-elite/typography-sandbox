@@ -68,8 +68,8 @@ export function Slider({
     onSlideEnd?.();
   }, [onSlideEnd]);
 
-  // Calculate percentages for slider gradient and recommended marker
-  const percentage = ((value - min) / (max - min)) * 100;
+  // Calculate percentages for slider gradient safely bound
+  const percentage = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100)) || 0;
 
   // Colors for active range
   const activeColor = '#3b82f6';
