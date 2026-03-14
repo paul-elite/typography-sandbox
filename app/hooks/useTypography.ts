@@ -101,11 +101,12 @@ export function useTypography() {
   }, [typography]);
 
   const comfortLevel = useMemo(() => {
-    if (readingComfort >= 80) return { label: 'Excellent', color: 'text-green-500' };
-    if (readingComfort >= 60) return { label: 'Good', color: 'text-emerald-500' };
-    if (readingComfort >= 40) return { label: 'Fair', color: 'text-yellow-500' };
-    if (readingComfort >= 20) return { label: 'Poor', color: 'text-orange-500' };
-    return { label: 'Very Poor', color: 'text-red-500' };
+    if (readingComfort >= 83.33) return { label: 'Excellent', color: 'text-[#00B82E]' };
+    if (readingComfort >= 66.67) return { label: 'Very Good', color: 'text-[#2599F8]' };
+    if (readingComfort >= 50) return { label: 'Good', color: 'text-[#2AC0EE]' };
+    if (readingComfort >= 33.33) return { label: 'Fair', color: 'text-[#FEB61D]' };
+    if (readingComfort >= 16.67) return { label: 'Poor', color: 'text-[#FE5722]' };
+    return { label: 'Very Poor', color: 'text-[#FA181C]' };
   }, [readingComfort]);
 
   return {
