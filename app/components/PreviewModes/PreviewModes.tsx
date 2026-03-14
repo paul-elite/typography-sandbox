@@ -105,30 +105,6 @@ export function PreviewModes({
       {/* Layout Section */}
       <CollapsibleSection title="Layout" defaultOpen={true} hasBorder={false}>
         <div className="space-y-4">
-          {/* Heading → Paragraph Gap */}
-          <Slider
-            label="Heading → Paragraph Gap"
-            value={layout.headingParagraphGap}
-            min={0}
-            max={64}
-            step={4}
-            unit="px"
-            onChange={(value) => onLayoutChange('headingParagraphGap', value)}
-            defaultValue={16}
-          />
-
-          {/* Paragraph → Caption Gap */}
-          <Slider
-            label="Paragraph → Caption Gap"
-            value={layout.paragraphCaptionGap}
-            min={0}
-            max={64}
-            step={4}
-            unit="px"
-            onChange={(value) => onLayoutChange('paragraphCaptionGap', value)}
-            defaultValue={24}
-          />
-
           {/* Container Padding */}
           <Slider
             label="Container Padding"

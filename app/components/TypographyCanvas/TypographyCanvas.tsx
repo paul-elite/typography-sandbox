@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import {
   TypographyState,
   ViewportPreset,
@@ -17,6 +17,7 @@ interface TypographyCanvasProps {
   selectedLayer: TextLayer | null;
   onSelectLayer: (layer: TextLayer | null) => void;
   layout: LayoutSettings;
+  onLayoutChange: <K extends keyof LayoutSettings>(key: K, value: LayoutSettings[K]) => void;
   layerContent: LayerContent;
   viewport: ViewportPreset;
   guides: TypographyGuides;
@@ -28,6 +29,68 @@ const LAYER_LABELS: Record<TextLayer, string> = {
   paragraph: 'Paragraph',
   caption: 'Caption',
 };
+
+function GapHandle({
+  value,
+  onChange,
+  minHeight = 0,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+  minHeight?: number;
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const delta = e.deltaY > 0 ? -4 : 4;
+    const newValue = Math.max(0, Math.min(96, value + delta));
+    onChange(newValue);
+  }, [value, onChange]);
+
+  const displayHeight = Math.max(minHeight, value);
+
+  return (
+    <div
+      className="relative group cursor-ns-resize"
+      style={{ height: `${displayHeight}px`, minHeight: `${minHeight}px` }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onWheel={handleWheel}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Hover indicator line */}
+      <div
+        className={`absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-center transition-opacity duration-150 ${
+          isHovered ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <div className="flex-1 h-px bg-blue-400 mx-2" />
+        <div className="flex items-center gap-1 px-2 py-1 bg-blue-500 text-white text-[10px] font-medium rounded-full shadow-sm">
+          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14" />
+          </svg>
+          {value}px
+        </div>
+        <div className="flex-1 h-px bg-blue-400 mx-2" />
+      </div>
+
+      {/* Scroll hint on hover */}
+      {isHovered && (
+        <div className="absolute -right-1 top-1/2 -translate-y-1/2 translate-x-full ml-2 flex flex-col items-center text-[9px] text-blue-500 font-medium">
+          <svg className="w-3 h-3 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+          </svg>
+          <span>scroll</span>
+          <svg className="w-3 h-3 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function LayerText({
   layer,
@@ -95,6 +158,7 @@ export function TypographyCanvas({
   selectedLayer,
   onSelectLayer,
   layout,
+  onLayoutChange,
   layerContent,
   viewport,
   guides,
@@ -229,7 +293,11 @@ export function TypographyCanvas({
             />
 
             {/* Gap between heading and paragraph */}
-            <div style={{ height: `${layout.headingParagraphGap}px` }} />
+            <GapHandle
+              value={layout.headingParagraphGap}
+              onChange={(value) => onLayoutChange('headingParagraphGap', value)}
+              minHeight={16}
+            />
 
             {/* Paragraph Layer */}
             <LayerText
@@ -242,7 +310,11 @@ export function TypographyCanvas({
             />
 
             {/* Gap between paragraph and caption */}
-            <div style={{ height: `${layout.paragraphCaptionGap}px` }} />
+            <GapHandle
+              value={layout.paragraphCaptionGap}
+              onChange={(value) => onLayoutChange('paragraphCaptionGap', value)}
+              minHeight={16}
+            />
 
             {/* Caption Layer */}
             <LayerText

@@ -126,6 +126,7 @@ export default function Home() {
               selectedLayer={selectedLayer}
               onSelectLayer={setSelectedLayer}
               layout={layout}
+              onLayoutChange={updateLayout}
               layerContent={layerContent}
               viewport={viewport}
               guides={guides}
