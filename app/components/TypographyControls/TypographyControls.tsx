@@ -5,6 +5,7 @@ import { Slider } from '../ui/Slider';
 import { FontSelector } from '../FontSelector/FontSelector';
 import { FontOption } from '../../types/typography';
 import { TypographyRecommendations, ActiveSlider } from '../../hooks/useRecommendations';
+import { AlignLeftLine, AlignCenterLine, AlignRightLine, AlignJustifyLine } from '@mingcute/react';
 
 interface TypographyControlsProps {
   typography: TypographyState;
@@ -179,7 +180,10 @@ export function TypographyControls({
                     : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
                 }`}
               >
-                {alignment.icon}
+                {alignment.value === 'left' && <AlignLeftLine className="mx-auto" />}
+                {alignment.value === 'center' && <AlignCenterLine className="mx-auto" />}
+                {alignment.value === 'right' && <AlignRightLine className="mx-auto" />}
+                {alignment.value === 'justify' && <AlignJustifyLine className="mx-auto" />}
               </button>
             ))}
           </div>
