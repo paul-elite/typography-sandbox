@@ -48,30 +48,54 @@ export function useTypography() {
   }, [previewMode, customText]);
 
   const readingComfort = useMemo(() => {
-    const { fontSize, lineHeight, paragraphWidth, letterSpacing } = typography;
+    const { fontSize, lineHeight, paragraphWidth, letterSpacing, wordSpacing, fontWeight, textAlign } = typography;
 
     let score = 100;
 
-    // Font size scoring (optimal: 16-20px)
-    if (fontSize < 14) score -= 20;
-    else if (fontSize < 16) score -= 10;
-    else if (fontSize > 24) score -= 10;
-    else if (fontSize > 32) score -= 20;
+    // Font size scoring (optimal: 16-20px for body text)
+    if (fontSize < 12) score -= 30;
+    else if (fontSize < 14) score -= 20;
+    else if (fontSize < 16) score -= 12;
+    else if (fontSize > 22) score -= 8;
+    else if (fontSize > 26) score -= 15;
+    else if (fontSize > 32) score -= 25;
 
-    // Line height scoring (optimal: 1.4-1.6)
-    if (lineHeight < 1.2) score -= 25;
-    else if (lineHeight < 1.4) score -= 10;
-    else if (lineHeight > 2) score -= 15;
+    // Line height scoring (optimal: 1.5-1.7 for body text)
+    if (lineHeight < 1.2) score -= 30;
+    else if (lineHeight < 1.4) score -= 18;
+    else if (lineHeight < 1.5) score -= 8;
+    else if (lineHeight > 1.8) score -= 8;
+    else if (lineHeight > 2.0) score -= 15;
+    else if (lineHeight > 2.2) score -= 25;
 
-    // Line length scoring (optimal: 50-75 characters)
-    if (paragraphWidth < 40) score -= 20;
-    else if (paragraphWidth < 50) score -= 10;
-    else if (paragraphWidth > 80) score -= 15;
-    else if (paragraphWidth > 90) score -= 25;
+    // Line length scoring (optimal: 55-75 characters)
+    if (paragraphWidth < 35) score -= 25;
+    else if (paragraphWidth < 45) score -= 15;
+    else if (paragraphWidth < 55) score -= 8;
+    else if (paragraphWidth > 75) score -= 8;
+    else if (paragraphWidth > 85) score -= 18;
+    else if (paragraphWidth > 95) score -= 28;
 
-    // Letter spacing scoring (optimal: -0.5 to 0.5)
-    if (Math.abs(letterSpacing) > 2) score -= 15;
-    else if (Math.abs(letterSpacing) > 1) score -= 5;
+    // Letter spacing scoring (optimal: -0.02 to 0.02em for body)
+    if (Math.abs(letterSpacing) > 0.15) score -= 20;
+    else if (Math.abs(letterSpacing) > 0.08) score -= 12;
+    else if (Math.abs(letterSpacing) > 0.04) score -= 6;
+
+    // Word spacing scoring (optimal: 0 to 0.1em)
+    if (Math.abs(wordSpacing) > 0.3) score -= 18;
+    else if (Math.abs(wordSpacing) > 0.2) score -= 12;
+    else if (Math.abs(wordSpacing) > 0.1) score -= 6;
+
+    // Font weight scoring (optimal: 400-500 for body)
+    if (fontWeight < 300) score -= 15;
+    else if (fontWeight < 400) score -= 8;
+    else if (fontWeight > 600) score -= 10;
+    else if (fontWeight > 700) score -= 18;
+
+    // Text alignment scoring
+    if (textAlign === 'justify') score -= 12;
+    else if (textAlign === 'center') score -= 8;
+    else if (textAlign === 'right') score -= 5;
 
     return Math.max(0, Math.min(100, score));
   }, [typography]);
