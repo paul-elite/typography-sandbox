@@ -71,40 +71,17 @@ export function TypographyMetrics({
           </span>
         </div>
 
-        {/* Segmented color bar */}
-        <div className="relative">
-          <div className="flex h-3 rounded-full overflow-hidden gap-0.5">
-            {COMFORT_COLORS.map((color, index) => (
-              <div
-                key={color.hex}
-                className="flex-1 transition-all duration-300 relative"
-                style={{
-                  backgroundColor: color.hex,
-                  opacity: index <= activeSegment ? 1 : 0.25,
-                }}
-              >
-                {/* Pulse animation on active segment */}
-                {index === activeSegment && (
-                  <div
-                    className="absolute inset-0 animate-pulse"
-                    style={{
-                      backgroundColor: color.hex,
-                      opacity: 0.5,
-                    }}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Indicator thumb */}
-          <div
-            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-lg border-2 transition-all duration-300 z-10"
-            style={{
-              left: `calc(${readingComfort}% - 8px)`,
-              borderColor: activeColor.hex,
-            }}
-          />
+        {/* Segmented squares */}
+        <div className="flex gap-1.5">
+          {COMFORT_COLORS.map((color, index) => (
+            <div
+              key={color.hex}
+              className="flex-1 h-6 rounded transition-all duration-300"
+              style={{
+                backgroundColor: index <= activeSegment ? color.hex : '#e4e4e7',
+              }}
+            />
+          ))}
         </div>
 
         <div className="flex justify-between mt-1.5">
