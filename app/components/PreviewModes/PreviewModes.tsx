@@ -43,14 +43,14 @@ export function PreviewModes({
   onToggleGuide,
 }: PreviewModesProps) {
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-5">
-      <h2 className="text-sm font-semibold text-zinc-200 uppercase tracking-wider">
+    <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-5 shadow-sm">
+      <h2 className="text-sm font-semibold text-zinc-800 uppercase tracking-wider">
         Preview Options
       </h2>
 
       {/* Preview Mode */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-zinc-300">
+        <label className="block text-sm font-medium text-zinc-700">
           Preview Mode
         </label>
         <div className="flex flex-wrap gap-1.5">
@@ -60,8 +60,8 @@ export function PreviewModes({
               onClick={() => onPreviewModeChange(mode.value)}
               className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
                 previewMode === mode.value
-                  ? 'bg-zinc-100 text-zinc-900 font-medium'
-                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300'
+                  ? 'bg-zinc-900 text-white font-medium'
+                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
               }`}
             >
               {mode.label}
@@ -73,21 +73,21 @@ export function PreviewModes({
       {/* Custom Text Input */}
       {previewMode === 'custom' && (
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-zinc-300">
+          <label className="block text-sm font-medium text-zinc-700">
             Custom Text
           </label>
           <textarea
             value={customText}
             onChange={(e) => onCustomTextChange(e.target.value)}
             placeholder="Enter your custom text here..."
-            className="w-full h-24 px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-zinc-100 placeholder-zinc-500 resize-none focus:outline-none focus:ring-1 focus:ring-zinc-500"
+            className="w-full h-24 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-900 placeholder-zinc-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
       )}
 
       {/* Viewport Presets */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-zinc-300">
+        <label className="block text-sm font-medium text-zinc-700">
           Viewport Width
         </label>
         <div className="flex gap-1.5">
@@ -98,8 +98,8 @@ export function PreviewModes({
               title={`${option.label} (${VIEWPORT_PRESETS[option.value].width}px)`}
               className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-md transition-colors ${
                 viewport === option.value
-                  ? 'bg-zinc-100 text-zinc-900 font-medium'
-                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300'
+                  ? 'bg-zinc-900 text-white font-medium'
+                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
               }`}
             >
               <span>{option.icon}</span>
@@ -114,7 +114,7 @@ export function PreviewModes({
 
       {/* Typography Guides */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-zinc-300">
+        <label className="block text-sm font-medium text-zinc-700">
           Typography Guides
         </label>
         <div className="space-y-1.5">
@@ -131,15 +131,15 @@ export function PreviewModes({
                   className="sr-only"
                 />
                 <div
-                  className={`w-4 h-4 rounded border transition-colors ${
+                  className={`w-4 h-4 rounded border-2 transition-colors ${
                     guides[guide.value]
-                      ? 'bg-zinc-100 border-zinc-100'
-                      : 'bg-zinc-800 border-zinc-600 group-hover:border-zinc-500'
+                      ? 'bg-blue-500 border-blue-500'
+                      : 'bg-white border-zinc-300 group-hover:border-zinc-400'
                   }`}
                 >
                   {guides[guide.value] && (
                     <svg
-                      className="w-4 h-4 text-zinc-900"
+                      className="w-3 h-3 text-white absolute top-0.5 left-0.5"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -150,7 +150,7 @@ export function PreviewModes({
                   )}
                 </div>
               </div>
-              <span className="text-sm text-zinc-400 group-hover:text-zinc-300">
+              <span className="text-sm text-zinc-600 group-hover:text-zinc-800">
                 {guide.label}
               </span>
             </label>

@@ -43,16 +43,16 @@ export default function Home() {
   const recommendations = useRecommendations(typography, activeSlider);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+    <div className="min-h-screen bg-zinc-50 text-zinc-900">
       {/* Header */}
-      <header className="border-b border-zinc-800">
+      <header className="border-b border-zinc-200 bg-white">
         <div className="max-w-[1800px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-zinc-100 to-zinc-400 rounded-lg flex items-center justify-center">
-              <span className="text-zinc-900 text-sm font-bold">Ty</span>
+            <div className="w-8 h-8 bg-gradient-to-br from-zinc-700 to-zinc-900 rounded-lg flex items-center justify-center">
+              <span className="text-white text-sm font-bold">Ty</span>
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-zinc-100">Typography Sandbox</h1>
+              <h1 className="text-lg font-semibold text-zinc-900">Typography Sandbox</h1>
               <p className="text-xs text-zinc-500">Experiment with typography variables in real-time</p>
             </div>
           </div>
@@ -61,7 +61,7 @@ export default function Home() {
               href="https://fonts.google.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+              className="text-xs text-zinc-500 hover:text-zinc-700 transition-colors"
             >
               Powered by Google Fonts
             </a>
@@ -124,9 +124,9 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 mt-12">
+      <footer className="border-t border-zinc-200 mt-12 bg-white">
         <div className="max-w-[1800px] mx-auto px-6 py-4">
-          <p className="text-xs text-zinc-600 text-center">
+          <p className="text-xs text-zinc-500 text-center">
             Typography Sandbox — A tool for experimenting with typography variables.
             Built with Next.js, Tailwind CSS, and TypeScript.
           </p>

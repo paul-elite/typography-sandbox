@@ -69,15 +69,15 @@ export function FontSelector({
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <label className="block text-sm font-medium text-zinc-300 mb-2">
+      <label className="block text-sm font-medium text-zinc-700 mb-2">
         Font Family
       </label>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-3 py-2.5 bg-zinc-800 border border-zinc-700 rounded-lg text-left hover:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-500 transition-colors"
+        className="w-full flex items-center justify-between px-3 py-2.5 bg-white border border-zinc-300 rounded-lg text-left hover:border-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
       >
         <span
-          className="text-zinc-100 truncate"
+          className="text-zinc-900 truncate"
           style={{ fontFamily: isFontLoaded(selectedFont) ? `'${selectedFont}', sans-serif` : 'inherit' }}
         >
           {selectedFont}
@@ -85,7 +85,7 @@ export function FontSelector({
         <div className="flex items-center gap-2">
           {loadingFont === selectedFont && (
             <svg
-              className="w-4 h-4 animate-spin text-zinc-400"
+              className="w-4 h-4 animate-spin text-zinc-500"
               fill="none"
               viewBox="0 0 24 24"
             >
@@ -105,7 +105,7 @@ export function FontSelector({
             </svg>
           )}
           <svg
-            className={`w-4 h-4 text-zinc-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+            className={`w-4 h-4 text-zinc-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -116,21 +116,21 @@ export function FontSelector({
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-zinc-800 border border-zinc-700 rounded-lg shadow-xl overflow-hidden">
-          <div className="p-2 border-b border-zinc-700">
+        <div className="absolute z-50 w-full mt-1 bg-white border border-zinc-200 rounded-lg shadow-lg overflow-hidden">
+          <div className="p-2 border-b border-zinc-200">
             <input
               ref={searchInputRef}
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search fonts..."
-              className="w-full px-3 py-2 bg-zinc-900 border border-zinc-700 rounded text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500"
+              className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div className="max-h-64 overflow-y-auto">
             {Object.entries(groupedFonts).map(([category, categoryFonts]) => (
               <div key={category}>
-                <div className="px-3 py-1.5 text-xs font-semibold text-zinc-500 uppercase tracking-wider bg-zinc-900/50">
+                <div className="px-3 py-1.5 text-xs font-semibold text-zinc-500 uppercase tracking-wider bg-zinc-50">
                   {categoryLabels[category] || category}
                 </div>
                 {categoryFonts.map((font) => (
@@ -138,8 +138,8 @@ export function FontSelector({
                     key={font.family}
                     onClick={() => handleSelect(font.family)}
                     onMouseEnter={() => loadFont(font.family)}
-                    className={`w-full px-3 py-2 text-left hover:bg-zinc-700/50 transition-colors flex items-center justify-between ${
-                      selectedFont === font.family ? 'bg-zinc-700 text-white' : 'text-zinc-300'
+                    className={`w-full px-3 py-2 text-left hover:bg-zinc-100 transition-colors flex items-center justify-between ${
+                      selectedFont === font.family ? 'bg-blue-50 text-blue-700' : 'text-zinc-700'
                     }`}
                   >
                     <span
@@ -173,7 +173,7 @@ export function FontSelector({
                       </svg>
                     )}
                     {!loadingFont && isFontLoaded(font.family) && selectedFont !== font.family && (
-                      <span className="text-xs text-zinc-500">Loaded</span>
+                      <span className="text-xs text-zinc-400">Loaded</span>
                     )}
                   </button>
                 ))}

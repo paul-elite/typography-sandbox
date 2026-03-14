@@ -46,8 +46,8 @@ export function TypographyMetrics({
   const activeColor = COMFORT_COLORS[activeSegment];
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-4">
-      <h2 className="text-sm font-semibold text-zinc-200 uppercase tracking-wider">
+    <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-4 shadow-sm">
+      <h2 className="text-sm font-semibold text-zinc-800 uppercase tracking-wider">
         Typography Metrics
       </h2>
 
@@ -55,12 +55,12 @@ export function TypographyMetrics({
         {metrics.map((metric) => (
           <div key={metric.label} className="flex justify-between items-baseline">
             <span className="text-xs text-zinc-500">{metric.label}</span>
-            <span className="text-sm text-zinc-300 font-mono">{metric.value}</span>
+            <span className="text-sm text-zinc-700 font-mono">{metric.value}</span>
           </div>
         ))}
       </div>
 
-      <div className="pt-3 border-t border-zinc-800">
+      <div className="pt-3 border-t border-zinc-200">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-zinc-500">Reading Comfort</span>
           <span
@@ -108,14 +108,14 @@ export function TypographyMetrics({
         </div>
 
         <div className="flex justify-between mt-1.5">
-          <span className="text-[10px] text-zinc-600">Poor</span>
+          <span className="text-[10px] text-zinc-400">Poor</span>
           <span className="text-[10px] text-zinc-500 font-mono">{readingComfort}%</span>
-          <span className="text-[10px] text-zinc-600">Excellent</span>
+          <span className="text-[10px] text-zinc-400">Excellent</span>
         </div>
       </div>
 
-      <div className="pt-3 border-t border-zinc-800 space-y-2">
-        <h3 className="text-xs font-medium text-zinc-400">Quick Tips</h3>
+      <div className="pt-3 border-t border-zinc-200 space-y-2">
+        <h3 className="text-xs font-medium text-zinc-600">Quick Tips</h3>
         <ul className="text-xs text-zinc-500 space-y-1">
           {typography.fontSize < 16 && (
             <li className="flex items-start gap-1.5">

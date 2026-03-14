@@ -78,8 +78,8 @@ export function Slider({
   }, [recommendedValue, min, max]);
 
   // Colors for active range
-  const activeColor = isSliding ? '#3b82f6' : '#a1a1aa';
-  const thumbBorderColor = isSliding ? '#3b82f6' : '#a1a1aa';
+  const activeColor = isSliding ? '#3b82f6' : '#71717a';
+  const trackBgColor = '#e4e4e7';
 
   // Hide ghost thumb when sliding (it follows the main thumb)
   const showGhostThumb = recommendedPercentage !== null && !isAtRecommended && !isSliding;
@@ -87,7 +87,7 @@ export function Slider({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label htmlFor={id} className="text-sm font-medium text-zinc-300">
+        <label htmlFor={id} className="text-sm font-medium text-zinc-700">
           {label}
         </label>
         <div className="flex items-center gap-2">
@@ -100,7 +100,7 @@ export function Slider({
               min={min}
               max={max}
               step={step}
-              className="w-16 px-2 py-1 text-xs text-right bg-zinc-800 border border-zinc-700 rounded text-zinc-200 focus:outline-none focus:ring-1 focus:ring-zinc-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="w-16 px-2 py-1 text-xs text-right bg-white border border-zinc-300 rounded text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
             {unit && <span className="ml-1 text-xs text-zinc-500">{unit}</span>}
           </div>
@@ -109,8 +109,8 @@ export function Slider({
             disabled={isAtRecommended || recommendedValue === undefined || isSliding}
             className={`p-1 rounded transition-colors ${
               isAtRecommended || recommendedValue === undefined || isSliding
-                ? 'text-zinc-600 cursor-not-allowed'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700'
+                ? 'text-zinc-300 cursor-not-allowed'
+                : 'text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100'
             }`}
             title="Snap to recommended"
             aria-label={`Snap ${label} to recommended value`}
@@ -145,7 +145,7 @@ export function Slider({
             title={`Click to apply recommended value`}
             aria-label={`Apply recommended value`}
           >
-            <div className="w-[14px] h-[14px] rounded-full bg-zinc-600 border-2 border-zinc-500 transition-all group-hover:bg-zinc-500 group-hover:border-zinc-400 group-hover:scale-110" />
+            <div className="w-[14px] h-[14px] rounded-full bg-zinc-300 border-2 border-zinc-400 transition-all group-hover:bg-zinc-400 group-hover:border-zinc-500 group-hover:scale-110" />
           </button>
         )}
 
@@ -165,7 +165,7 @@ export function Slider({
             isSliding ? 'slider-track-active' : 'slider-track'
           }`}
           style={{
-            background: `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${percentage}%, #3f3f46 ${percentage}%, #3f3f46 100%)`,
+            background: `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${percentage}%, ${trackBgColor} ${percentage}%, ${trackBgColor} 100%)`,
           }}
         />
       </div>
@@ -176,38 +176,40 @@ export function Slider({
           width: 14px;
           height: 14px;
           border-radius: 50%;
-          background: #fafafa;
+          background: #ffffff;
           cursor: pointer;
-          border: 2px solid ${thumbBorderColor};
+          border: 2px solid #71717a;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
           transition: all 0.15s ease;
           position: relative;
           z-index: 20;
         }
         .slider-track::-webkit-slider-thumb:hover {
           transform: scale(1.1);
-          border-color: #fafafa;
+          border-color: #52525b;
         }
         .slider-track::-moz-range-thumb {
           width: 14px;
           height: 14px;
           border-radius: 50%;
-          background: #fafafa;
+          background: #ffffff;
           cursor: pointer;
-          border: 2px solid ${thumbBorderColor};
+          border: 2px solid #71717a;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
           transition: all 0.15s ease;
           position: relative;
           z-index: 20;
         }
         .slider-track::-moz-range-thumb:hover {
           transform: scale(1.1);
-          border-color: #fafafa;
+          border-color: #52525b;
         }
         .slider-track-active::-webkit-slider-thumb {
           appearance: none;
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          background: #fafafa;
+          background: #ffffff;
           cursor: pointer;
           border: 2px solid #3b82f6;
           box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
@@ -219,7 +221,7 @@ export function Slider({
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          background: #fafafa;
+          background: #ffffff;
           cursor: pointer;
           border: 2px solid #3b82f6;
           box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);

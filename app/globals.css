@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #09090b;
-  --foreground: #fafafa;
+  --background: #fafafa;
+  --foreground: #18181b;
 }
 
 @theme inline {
@@ -25,33 +25,33 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #18181b;
+  background: #f4f4f5;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3f3f46;
+  background: #d4d4d8;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #52525b;
+  background: #a1a1aa;
 }
 
 /* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #3f3f46 #18181b;
+  scrollbar-color: #d4d4d8 #f4f4f5;
 }
 
 /* Selection styles */
 ::selection {
-  background: rgba(161, 161, 170, 0.3);
+  background: rgba(59, 130, 246, 0.2);
 }
 
 /* Focus styles */
 :focus-visible {
-  outline: 2px solid #71717a;
+  outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
 

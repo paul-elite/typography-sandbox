@@ -31,33 +31,6 @@ export function TypographyCanvas({
     textAlign: typography.textAlign as React.CSSProperties['textAlign'],
   }), [typography, isFontLoaded]);
 
-  const baselineGridStyle = useMemo(() => {
-    const lineHeightPx = typography.fontSize * typography.lineHeight;
-    return {
-      backgroundImage: `linear-gradient(to bottom, transparent ${lineHeightPx - 1}px, rgba(59, 130, 246, 0.3) ${lineHeightPx - 1}px, rgba(59, 130, 246, 0.3) ${lineHeightPx}px)`,
-      backgroundSize: `100% ${lineHeightPx}px`,
-    };
-  }, [typography.fontSize, typography.lineHeight]);
-
-  const lineBoxStyle = useMemo(() => {
-    const lineHeightPx = typography.fontSize * typography.lineHeight;
-    return {
-      backgroundImage: `repeating-linear-gradient(to bottom, rgba(168, 85, 247, 0.1) 0px, rgba(168, 85, 247, 0.1) ${lineHeightPx}px, rgba(168, 85, 247, 0.05) ${lineHeightPx}px, rgba(168, 85, 247, 0.05) ${lineHeightPx * 2}px)`,
-    };
-  }, [typography.fontSize, typography.lineHeight]);
-
-  const xHeightStyle = useMemo(() => {
-    // Approximate x-height as 50% of font size for most fonts
-    const xHeight = typography.fontSize * 0.5;
-    const lineHeightPx = typography.fontSize * typography.lineHeight;
-    const topOffset = (lineHeightPx - typography.fontSize) / 2 + typography.fontSize * 0.25;
-
-    return {
-      backgroundImage: `repeating-linear-gradient(to bottom, transparent 0px, transparent ${topOffset}px, rgba(34, 197, 94, 0.2) ${topOffset}px, rgba(34, 197, 94, 0.2) ${topOffset + xHeight}px, transparent ${topOffset + xHeight}px, transparent ${lineHeightPx}px)`,
-      backgroundSize: `100% ${lineHeightPx}px`,
-    };
-  }, [typography.fontSize, typography.lineHeight]);
-
   const combinedGuideStyle = useMemo(() => {
     const styles: React.CSSProperties = {};
     const backgrounds: string[] = [];
@@ -71,7 +44,7 @@ export function TypographyCanvas({
 
     if (guides.lineBox) {
       const lineHeightPx = typography.fontSize * typography.lineHeight;
-      backgrounds.push(`repeating-linear-gradient(to bottom, rgba(168, 85, 247, 0.08) 0px, rgba(168, 85, 247, 0.08) ${lineHeightPx}px, transparent ${lineHeightPx}px, transparent ${lineHeightPx * 2}px)`);
+      backgrounds.push(`repeating-linear-gradient(to bottom, rgba(168, 85, 247, 0.1) 0px, rgba(168, 85, 247, 0.1) ${lineHeightPx}px, transparent ${lineHeightPx}px, transparent ${lineHeightPx * 2}px)`);
       sizes.push(`100% ${lineHeightPx * 2}px`);
     }
 
@@ -79,7 +52,7 @@ export function TypographyCanvas({
       const xHeight = typography.fontSize * 0.5;
       const lineHeightPx = typography.fontSize * typography.lineHeight;
       const topOffset = (lineHeightPx - typography.fontSize) / 2 + typography.fontSize * 0.25;
-      backgrounds.push(`repeating-linear-gradient(to bottom, transparent 0px, transparent ${topOffset}px, rgba(34, 197, 94, 0.15) ${topOffset}px, rgba(34, 197, 94, 0.15) ${topOffset + xHeight}px, transparent ${topOffset + xHeight}px, transparent ${lineHeightPx}px)`);
+      backgrounds.push(`repeating-linear-gradient(to bottom, transparent 0px, transparent ${topOffset}px, rgba(34, 197, 94, 0.2) ${topOffset}px, rgba(34, 197, 94, 0.2) ${topOffset + xHeight}px, transparent ${topOffset + xHeight}px, transparent ${lineHeightPx}px)`);
       sizes.push(`100% ${lineHeightPx}px`);
     }
 
@@ -120,13 +93,13 @@ export function TypographyCanvas({
       )}
 
       {/* Canvas Container */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-zinc-800/50 rounded-xl overflow-auto">
+      <div className="flex-1 flex items-center justify-center p-6 bg-zinc-100 rounded-xl overflow-auto border border-zinc-200">
         <div
-          className="bg-white rounded-lg shadow-2xl transition-all duration-300 overflow-hidden"
+          className="bg-white rounded-lg shadow-lg transition-all duration-300 overflow-hidden border border-zinc-200"
           style={{ width: `min(100%, ${viewportWidth}px)` }}
         >
           {/* Viewport Indicator */}
-          <div className="flex items-center justify-between px-4 py-2 bg-zinc-100 border-b border-zinc-200">
+          <div className="flex items-center justify-between px-4 py-2 bg-zinc-50 border-b border-zinc-200">
             <div className="flex items-center gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
               <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
@@ -154,10 +127,10 @@ export function TypographyCanvas({
 
       {/* Font Loading Indicator */}
       {!isFontLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-zinc-900/50 rounded-xl">
-          <div className="flex items-center gap-2 px-4 py-2 bg-zinc-800 rounded-full">
+        <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-xl">
+          <div className="flex items-center gap-2 px-4 py-2 bg-zinc-100 rounded-full border border-zinc-200">
             <svg
-              className="w-4 h-4 animate-spin text-zinc-400"
+              className="w-4 h-4 animate-spin text-zinc-500"
               fill="none"
               viewBox="0 0 24 24"
             >
@@ -175,7 +148,7 @@ export function TypographyCanvas({
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            <span className="text-sm text-zinc-300">Loading font...</span>
+            <span className="text-sm text-zinc-700">Loading font...</span>
           </div>
         </div>
       )}

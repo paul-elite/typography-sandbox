@@ -34,14 +34,14 @@ export function TypographyControls({
   const availableWeights = getFontWeights(typography.fontFamily);
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-6">
+    <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-6 shadow-sm">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-zinc-200 uppercase tracking-wider">
+        <h2 className="text-sm font-semibold text-zinc-800 uppercase tracking-wider">
           Typography Controls
         </h2>
         <button
           onClick={onResetAll}
-          className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors px-2 py-1 rounded hover:bg-zinc-800"
+          className="text-xs text-zinc-500 hover:text-zinc-700 transition-colors px-2 py-1 rounded hover:bg-zinc-100"
         >
           Reset All
         </button>
@@ -60,7 +60,7 @@ export function TypographyControls({
 
         {/* Font Weight */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
+          <label className="block text-sm font-medium text-zinc-700 mb-2">
             Font Weight
           </label>
           <div className="flex flex-wrap gap-1.5">
@@ -70,8 +70,8 @@ export function TypographyControls({
                 onClick={() => onUpdate('fontWeight', weight)}
                 className={`px-2.5 py-1.5 text-xs rounded-md transition-colors ${
                   typography.fontWeight === weight
-                    ? 'bg-zinc-100 text-zinc-900 font-medium'
-                    : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300'
+                    ? 'bg-zinc-900 text-white font-medium'
+                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
                 }`}
               >
                 {weight}
@@ -164,7 +164,7 @@ export function TypographyControls({
 
         {/* Text Alignment */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
+          <label className="block text-sm font-medium text-zinc-700 mb-2">
             Text Alignment
           </label>
           <div className="flex gap-1">
@@ -175,8 +175,8 @@ export function TypographyControls({
                 title={alignment.label}
                 className={`flex-1 py-2 text-lg rounded-md transition-colors ${
                   typography.textAlign === alignment.value
-                    ? 'bg-zinc-100 text-zinc-900'
-                    : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300'
+                    ? 'bg-zinc-900 text-white'
+                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
                 }`}
               >
                 {alignment.icon}

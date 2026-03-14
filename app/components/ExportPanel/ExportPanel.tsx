@@ -43,16 +43,16 @@ export function ExportPanel({ typography }: ExportPanelProps) {
   }, [exportedCode, activeFormat]);
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+    <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-5 hover:bg-zinc-800/50 transition-colors"
+        className="w-full flex items-center justify-between p-5 hover:bg-zinc-50 transition-colors"
       >
-        <h2 className="text-sm font-semibold text-zinc-200 uppercase tracking-wider">
+        <h2 className="text-sm font-semibold text-zinc-800 uppercase tracking-wider">
           Export Typography
         </h2>
         <svg
-          className={`w-4 h-4 text-zinc-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 text-zinc-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -62,7 +62,7 @@ export function ExportPanel({ typography }: ExportPanelProps) {
       </button>
 
       {isExpanded && (
-        <div className="px-5 pb-5 space-y-4 border-t border-zinc-800 pt-4">
+        <div className="px-5 pb-5 space-y-4 border-t border-zinc-200 pt-4">
           {/* Format Selector */}
           <div className="flex gap-1.5">
             {exportFormats.map((format) => (
@@ -71,8 +71,8 @@ export function ExportPanel({ typography }: ExportPanelProps) {
                 onClick={() => setActiveFormat(format.value)}
                 className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-md transition-colors ${
                   activeFormat === format.value
-                    ? 'bg-zinc-100 text-zinc-900 font-medium'
-                    : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300'
+                    ? 'bg-zinc-900 text-white font-medium'
+                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
                 }`}
               >
                 <span>{format.icon}</span>
@@ -83,7 +83,7 @@ export function ExportPanel({ typography }: ExportPanelProps) {
 
           {/* Code Preview */}
           <div className="relative">
-            <pre className="p-4 bg-zinc-950 rounded-lg text-xs text-zinc-300 overflow-auto max-h-64 font-mono">
+            <pre className="p-4 bg-zinc-900 rounded-lg text-xs text-zinc-300 overflow-auto max-h-64 font-mono">
               <code>{exportedCode}</code>
             </pre>
 
