@@ -93,7 +93,7 @@ export function TypographyCanvas({
       )}
 
       {/* Canvas Container */}
-      <div className="flex-1 flex items-center justify-center p-6 rounded-xl overflow-auto border border-zinc-200">
+      <div className="flex-1 flex items-center justify-center p-6 rounded-xl overflow-auto">
         <div
           className="rounded-lg shadow-lg transition-all duration-300 overflow-hidden border border-amber-200"
           style={{ width: `min(100%, ${viewportWidth}px)` }}
