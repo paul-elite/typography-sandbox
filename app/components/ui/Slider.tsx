@@ -136,11 +136,11 @@ export function Slider({
       <div className="relative h-4 flex items-center group">
 
         {/* Base Track (Background) */}
-        <div className="absolute w-full h-1.5 rounded-full bg-zinc-200" />
+        <div className="absolute w-full h-2.5 rounded-full bg-zinc-200" />
 
         {/* Active Value Trace (Black) */}
         <div
-          className="absolute h-1.5 rounded-full bg-black z-10"
+          className="absolute h-2.5 rounded-full bg-black z-10"
           style={{ width: `${percentage}%` }}
         />
 
@@ -149,7 +149,7 @@ export function Slider({
           <div
             className="absolute rounded-full bg-[#2599F8] z-20 pointer-events-none transition-all duration-200"
             style={{
-              height: '2px',
+              height: '6px',
               top: '50%',
               transform: 'translateY(-50%)',
               left: `${recommendedZone.start}%`,
@@ -170,7 +170,7 @@ export function Slider({
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          className={`w-full h-1.5 rounded-full appearance-none cursor-pointer relative z-30 transition-all duration-150 bg-transparent ${isSliding ? 'slider-track-active' : 'slider-track'
+          className={`w-full h-2.5 rounded-full appearance-none cursor-pointer relative z-30 transition-all duration-150 bg-transparent ${isSliding ? 'slider-track-active' : 'slider-track'
             }`}
         />
       </div>
