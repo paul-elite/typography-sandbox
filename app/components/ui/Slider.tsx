@@ -82,10 +82,10 @@ export function Slider({
     };
   }, [recommendedValue, min, max]);
 
-  // Colors for active range
-  const activeColor = isSliding ? '#3b82f6' : '#71717a';
-  const trackBgColor = '#e4e4e7';
-  const recommendedColor = '#a1a1aa'; // Darker grey for the recommended spectrum zone
+  // Colors for tracks and zones
+  const activeColor = '#71717a'; // Solid grey for actual amount
+  const trackBgColor = '#e4e4e7'; // Light grey for empty track
+  const recommendedColor = '#3b82f6'; // Blue for the recommended spectrum zone
 
   return (
     <div className="space-y-2">
