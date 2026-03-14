@@ -47,18 +47,6 @@ export function TypographyControls({
         </button>
       </div>
 
-      {/* Legend for recommended values */}
-      <div className="flex items-center gap-4 px-2 py-1.5 bg-zinc-800/50 rounded-lg">
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rotate-45 bg-amber-400" />
-          <span className="text-[10px] text-zinc-400">Recommended value</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rotate-45 bg-emerald-400" />
-          <span className="text-[10px] text-zinc-400">At recommended</span>
-        </div>
-      </div>
-
       <div className="space-y-5">
         {/* Font Family */}
         <FontSelector

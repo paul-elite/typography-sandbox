@@ -65,11 +65,6 @@ export function Slider({
     return ((clamped - min) / (max - min)) * 100;
   }, [recommendedValue, min, max]);
 
-  const formattedRecommended = useMemo(() => {
-    if (recommendedValue === undefined) return null;
-    return formatValue ? formatValue(recommendedValue) : recommendedValue.toString();
-  }, [recommendedValue, formatValue]);
-
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -119,8 +114,21 @@ export function Slider({
         </div>
       </div>
 
-      {/* Slider track with recommended marker */}
-      <div className="relative">
+      {/* Slider track with ghost recommended thumb */}
+      <div className="relative h-4 flex items-center">
+        {/* Ghost thumb for recommended value */}
+        {recommendedPercentage !== null && !isAtRecommended && (
+          <button
+            onClick={onApplyRecommended}
+            className="absolute top-1/2 -translate-y-1/2 z-[5] cursor-pointer group"
+            style={{ left: `calc(${recommendedPercentage}% - 7px)` }}
+            title={`Click to apply recommended value`}
+            aria-label={`Apply recommended value`}
+          >
+            <div className="w-[14px] h-[14px] rounded-full bg-zinc-600 border-2 border-zinc-500 transition-all group-hover:bg-zinc-500 group-hover:border-zinc-400 group-hover:scale-110" />
+          </button>
+        )}
+
         <input
           id={id}
           type="range"
@@ -134,55 +142,7 @@ export function Slider({
             background: `linear-gradient(to right, #a1a1aa 0%, #a1a1aa ${percentage}%, #3f3f46 ${percentage}%, #3f3f46 100%)`,
           }}
         />
-
-        {/* Recommended value marker */}
-        {recommendedPercentage !== null && (
-          <button
-            onClick={onApplyRecommended}
-            className="absolute top-1/2 -translate-y-1/2 z-20 group"
-            style={{ left: `calc(${recommendedPercentage}% - 4px)` }}
-            title={`Recommended: ${formattedRecommended}${unit}`}
-            aria-label={`Apply recommended value: ${formattedRecommended}${unit}`}
-          >
-            {/* Diamond marker */}
-            <div
-              className={`w-2 h-2 rotate-45 transition-all ${
-                isAtRecommended
-                  ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]'
-                  : 'bg-amber-400 group-hover:bg-amber-300 group-hover:scale-125'
-              }`}
-            />
-            {/* Tooltip on hover */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-zinc-800 border border-zinc-700 rounded text-xs text-zinc-200 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-              <span className="text-amber-400">Rec:</span> {formattedRecommended}{unit}
-              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-zinc-700" />
-            </div>
-          </button>
-        )}
       </div>
-
-      {/* Recommended value indicator below slider */}
-      {recommendedValue !== undefined && !isAtRecommended && (
-        <div className="flex items-center justify-between text-[10px]">
-          <span className="text-zinc-600">{min}{unit}</span>
-          <button
-            onClick={onApplyRecommended}
-            className="flex items-center gap-1 text-amber-400/80 hover:text-amber-300 transition-colors"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="10"
-              height="10"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-            </svg>
-            <span>Recommended: {formattedRecommended}{unit}</span>
-          </button>
-          <span className="text-zinc-600">{max}{unit}</span>
-        </div>
-      )}
 
       <style jsx>{`
         .slider-track::-webkit-slider-thumb {
@@ -194,6 +154,8 @@ export function Slider({
           cursor: pointer;
           border: 2px solid #a1a1aa;
           transition: all 0.15s ease;
+          position: relative;
+          z-index: 20;
         }
         .slider-track::-webkit-slider-thumb:hover {
           transform: scale(1.1);
@@ -207,6 +169,8 @@ export function Slider({
           cursor: pointer;
           border: 2px solid #a1a1aa;
           transition: all 0.15s ease;
+          position: relative;
+          z-index: 20;
         }
         .slider-track::-moz-range-thumb:hover {
           transform: scale(1.1);
