@@ -21,6 +21,8 @@ interface TypographyCanvasProps {
   onLayoutChange: <K extends keyof LayoutSettings>(key: K, value: LayoutSettings[K]) => void;
   layerContent: LayerContent;
   viewport: ViewportPreset;
+  customViewportWidth: number;
+  onCustomViewportWidthChange: (width: number) => void;
   guides: TypographyGuides;
   isFontLoaded: (font: string) => boolean;
 }
@@ -220,10 +222,42 @@ export function TypographyCanvas({
   onLayoutChange,
   layerContent,
   viewport,
+  customViewportWidth,
+  onCustomViewportWidthChange,
   guides,
   isFontLoaded,
 }: TypographyCanvasProps) {
-  const viewportWidth = VIEWPORT_PRESETS[viewport].width;
+  const viewportWidth = viewport === 'custom' ? customViewportWidth : (VIEWPORT_PRESETS as any)[viewport].width;
+
+  const [isContainerResizing, setIsContainerResizing] = useState(false);
+  const containerResizeStartRef = useRef<{ x: number; startWidthPx: number } | null>(null);
+
+  const handleContainerResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    containerResizeStartRef.current = { x: e.clientX, startWidthPx: viewportWidth };
+    setIsContainerResizing(true);
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      if (!containerResizeStartRef.current) return;
+      const deltaX = moveEvent.clientX - containerResizeStartRef.current.x;
+      let newWidth = Math.round(containerResizeStartRef.current.startWidthPx + deltaX * 2); // Multiplied by 2 if center-aligned? Wait, dragging the right edge of a centered element moves the edge by deltaX but increases width by 2*deltaX.
+      // Above logic is if the container is flex-centered. The container is indeed centered: `justify-center`.
+      // So width increases by 2 * deltaX if we drag the right edge.
+      newWidth = Math.max(320, Math.min(2400, newWidth));
+      onCustomViewportWidthChange(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      containerResizeStartRef.current = null;
+      setIsContainerResizing(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  }, [viewportWidth, onCustomViewportWidthChange]);
 
   // Use the selected layer's typography for guide calculations, default to paragraph
   const guideTypography = selectedLayer ? layerTypography[selectedLayer] : layerTypography.paragraph;
@@ -322,14 +356,17 @@ export function TypographyCanvas({
         className="flex-1 flex items-start justify-center p-6 rounded-xl overflow-auto min-h-0 cursor-default"
         onClick={handleCanvasClick}
       >
-        <div
-          className="rounded-lg transition-all duration-300 overflow-hidden border shadow-[4px_4px_0px_rgba(0,0,0,0.08)]"
-          style={{ 
-            width: `min(100%, ${viewportWidth}px)`,
-            borderColor: layout.strokeColor || '#FBD152'
-          }}
-          onClick={(e) => e.stopPropagation()}
+        <div 
+          className={`relative ${!isContainerResizing ? 'transition-all duration-300' : ''}`}
+          style={{ width: `min(100%, ${viewportWidth}px)` }}
         >
+          <div
+            className={`rounded-lg overflow-hidden border shadow-[4px_4px_0px_rgba(0,0,0,0.08)] bg-white`}
+            style={{ 
+              borderColor: layout.strokeColor || '#FBD152'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
           {/* Viewport Indicator */}
           <div
             className="flex items-center justify-between px-4 py-2 border-b"
@@ -402,6 +439,19 @@ export function TypographyCanvas({
               onChange={selectedLayer === 'caption' ? onTypographyChange : undefined}
               isFontLoaded={isFontLoaded(layerTypography.caption.fontFamily)}
             />
+          </div>
+        </div>
+
+        {/* Container Drag Handle */}
+          <div
+            className="absolute -right-4 top-0 bottom-0 w-8 cursor-col-resize flex flex-col justify-center items-center group/container md:-right-6"
+            onMouseDown={handleContainerResizeStart}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={`w-1.5 h-16 rounded-full transition-colors ${isContainerResizing ? 'bg-amber-600' : 'bg-transparent group-hover/container:bg-amber-400'}`} />
+            <div className={`absolute top-1/2 -translate-y-1/2 left-full ml-2 px-2 py-1 bg-amber-600 text-white text-xs font-mono rounded shadow-lg transition-opacity whitespace-nowrap pointer-events-none ${isContainerResizing ? 'opacity-100' : 'opacity-0'}`}>
+              {viewportWidth}px
+            </div>
           </div>
         </div>
       </div>

@@ -14,6 +14,7 @@ import {
   DEFAULT_LAYER_CONTENT,
   ViewportPreset,
   TypographyGuides,
+  VIEWPORT_PRESETS,
 } from '../types/typography';
 
 const DEFAULT_LAYER_TYPOGRAPHY: LayerTypography = {
@@ -28,6 +29,7 @@ export function useTypography() {
   const [layout, setLayout] = useState<LayoutSettings>(DEFAULT_LAYOUT);
   const [layerContent, setLayerContent] = useState<LayerContent>({ ...DEFAULT_LAYER_CONTENT });
   const [viewport, setViewport] = useState<ViewportPreset>('desktop');
+  const [customViewportWidth, setCustomViewportWidth] = useState<number>(VIEWPORT_PRESETS.desktop.width);
   const [guides, setGuides] = useState<TypographyGuides>({
     baselineGrid: false,
     lineBox: false,
@@ -170,6 +172,8 @@ export function useTypography() {
     // Viewport and guides
     viewport,
     setViewport,
+    customViewportWidth,
+    setCustomViewportWidth,
     guides,
     toggleGuide,
     // Metrics

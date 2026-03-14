@@ -52,7 +52,7 @@ export interface LayerContent {
 
 export type PreviewMode = 'word' | 'sentence' | 'paragraph' | 'custom';
 
-export type ViewportPreset = 'mobile' | 'tablet' | 'desktop';
+export type ViewportPreset = 'mobile' | 'tablet' | 'desktop' | 'custom';
 
 export type ExportFormat = 'css' | 'tailwind' | 'json';
 
@@ -67,7 +67,7 @@ export interface ViewportDimensions {
   label: string;
 }
 
-export const VIEWPORT_PRESETS: Record<ViewportPreset, ViewportDimensions> = {
+export const VIEWPORT_PRESETS: Record<Exclude<ViewportPreset, 'custom'>, ViewportDimensions> = {
   mobile: { width: 375, label: 'Mobile (375px)' },
   tablet: { width: 768, label: 'Tablet (768px)' },
   desktop: { width: 1200, label: 'Desktop (1200px)' },

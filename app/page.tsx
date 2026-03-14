@@ -33,6 +33,8 @@ export default function Home() {
     // Viewport and guides
     viewport,
     setViewport,
+    customViewportWidth,
+    setCustomViewportWidth,
     guides,
     toggleGuide,
     // Metrics
@@ -130,6 +132,11 @@ export default function Home() {
               onLayoutChange={updateLayout}
               layerContent={layerContent}
               viewport={viewport}
+              customViewportWidth={customViewportWidth}
+              onCustomViewportWidthChange={(w) => {
+                setCustomViewportWidth(w);
+                if (viewport !== 'custom') setViewport('custom');
+              }}
               guides={guides}
               isFontLoaded={isFontLoaded}
             />
@@ -149,6 +156,7 @@ export default function Home() {
                 layerContent={layerContent}
                 onLayerContentChange={updateLayerContent}
                 viewport={viewport}
+                customViewportWidth={customViewportWidth}
                 onViewportChange={setViewport}
                 guides={guides}
                 onToggleGuide={toggleGuide}

@@ -26,6 +26,7 @@ interface PreviewModesProps {
   layerContent: LayerContent;
   onLayerContentChange: (layer: TextLayer, content: string) => void;
   viewport: ViewportPreset;
+  customViewportWidth: number;
   onViewportChange: (viewport: ViewportPreset) => void;
   guides: TypographyGuides;
   onToggleGuide: (guide: keyof TypographyGuides) => void;
@@ -93,6 +94,7 @@ export function PreviewModes({
   layerContent,
   onLayerContentChange,
   viewport,
+  customViewportWidth,
   onViewportChange,
   guides,
   onToggleGuide,
@@ -228,8 +230,8 @@ export function PreviewModes({
             {viewportOptions.map((option) => (
               <button
                 key={option.value}
-                onClick={() => onViewportChange(option.value)}
-                title={`${option.label} (${VIEWPORT_PRESETS[option.value].width}px)`}
+                onClick={() => onViewportChange(option.value as ViewportPreset)}
+                title={option.value === 'custom' ? `Custom` : `${option.label} (${(VIEWPORT_PRESETS as any)[option.value].width}px)`}
                 className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-md transition-colors ${viewport === option.value
                   ? 'bg-zinc-900 text-white font-medium'
                   : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
@@ -245,7 +247,9 @@ export function PreviewModes({
             ))}
           </div>
           <p className="text-xs text-zinc-500">
-            {VIEWPORT_PRESETS[viewport].label}
+            {viewport === 'custom' 
+              ? `Custom (${customViewportWidth}px)`
+              : (VIEWPORT_PRESETS as any)[viewport].label}
           </p>
         </div>
       </CollapsibleSection>
