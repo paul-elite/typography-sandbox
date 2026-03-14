@@ -9,6 +9,7 @@ import {
   TextLayer,
   LayerContent,
   DEFAULT_LAYER_CONTENT,
+  DEFAULT_LAYOUT,
 } from '../../types/typography';
 import { Slider } from '../ui/Slider';
 import { ColorPicker } from '../ui/ColorPicker';
@@ -153,7 +154,19 @@ export function PreviewModes({
             <ColorPicker
               value={layout.backgroundColor}
               onChange={(color) => onLayoutChange('backgroundColor', color)}
-              defaultValue="#FFF1D4"
+              defaultValue={DEFAULT_LAYOUT.backgroundColor}
+            />
+          </div>
+
+          {/* Stroke Color */}
+          <div>
+            <label className="block text-xs text-zinc-500 mb-2">
+              Stroke Color
+            </label>
+            <ColorPicker
+              value={layout.strokeColor || '#FBD152'}
+              onChange={(color) => onLayoutChange('strokeColor', color)}
+              defaultValue={DEFAULT_LAYOUT.strokeColor}
             />
           </div>
         </div>

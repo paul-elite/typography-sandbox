@@ -33,6 +33,7 @@ export interface LayoutSettings {
   padding: number;              // Container padding (px)
   alignment: 'start' | 'center' | 'stretch';  // Cross-axis alignment
   backgroundColor: string;      // Background color of the notepad
+  strokeColor: string;          // Stroke color of the notepad and baseline grid
 }
 
 // Default text content for each layer
@@ -127,6 +128,7 @@ export const DEFAULT_LAYOUT: LayoutSettings = {
   padding: 32,
   alignment: 'start',
   backgroundColor: '#FFF1D4',
+  strokeColor: '#FBD152',
 };
 
 export const FONT_WEIGHTS = [100, 200, 300, 400, 500, 600, 700, 800, 900];

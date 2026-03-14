@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useRef } from 'react';
 import {
   TypographyState,
   ViewportPreset,
@@ -40,54 +40,62 @@ function GapHandle({
   minHeight?: number;
 }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartRef = useRef<{ y: number; startValue: number } | null>(null);
 
-  const handleWheel = useCallback((e: React.WheelEvent) => {
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const delta = e.deltaY > 0 ? -4 : 4;
-    const newValue = Math.max(0, Math.min(96, value + delta));
-    onChange(newValue);
+    dragStartRef.current = { y: e.clientY, startValue: value };
+    setIsDragging(true);
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      if (!dragStartRef.current) return;
+      const deltaY = dragStartRef.current.y - moveEvent.clientY;
+      const newValue = Math.max(0, Math.min(128, dragStartRef.current.startValue + deltaY));
+      onChange(Math.round(newValue / 2) * 2); // Snap to 2px increments
+    };
+
+    const handleMouseUp = () => {
+      dragStartRef.current = null;
+      setIsDragging(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   }, [value, onChange]);
 
   const displayHeight = Math.max(minHeight, value);
+  const isActive = isHovered || isDragging;
 
   return (
     <div
-      className="relative group cursor-ns-resize"
+      className={`relative cursor-ns-resize select-none ${isDragging ? 'z-50' : ''}`}
       style={{ height: `${displayHeight}px`, minHeight: `${minHeight}px` }}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onWheel={handleWheel}
+      onMouseLeave={() => !isDragging && setIsHovered(false)}
+      onMouseDown={handleMouseDown}
       onClick={(e) => e.stopPropagation()}
     >
-      {/* Hover indicator line */}
+      {/* Hover/drag indicator */}
       <div
-        className={`absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-center transition-opacity duration-150 ${
-          isHovered ? 'opacity-100' : 'opacity-0'
+        className={`absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-center transition-opacity duration-100 ${
+          isActive ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <div className="flex-1 h-px bg-blue-400 mx-2" />
-        <div className="flex items-center gap-1 px-2 py-1 bg-blue-500 text-white text-[10px] font-medium rounded-full shadow-sm">
-          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14" />
+        <div className={`flex-1 h-px mx-2 ${isDragging ? 'bg-blue-500' : 'bg-blue-400'}`} />
+        <div className={`flex items-center gap-1.5 px-2.5 py-1 text-white text-[11px] font-medium rounded-full shadow-md transition-colors ${
+          isDragging ? 'bg-blue-600' : 'bg-blue-500'
+        }`}>
+          <svg className="w-3 h-3 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M7 10l5-5 5 5M7 14l5 5 5-5" />
           </svg>
           {value}px
         </div>
-        <div className="flex-1 h-px bg-blue-400 mx-2" />
+        <div className={`flex-1 h-px mx-2 ${isDragging ? 'bg-blue-500' : 'bg-blue-400'}`} />
       </div>
-
-      {/* Scroll hint on hover */}
-      {isHovered && (
-        <div className="absolute -right-1 top-1/2 -translate-y-1/2 translate-x-full ml-2 flex flex-col items-center text-[9px] text-blue-500 font-medium">
-          <svg className="w-3 h-3 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
-          </svg>
-          <span>scroll</span>
-          <svg className="w-3 h-3 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
-      )}
     </div>
   );
 }
@@ -176,7 +184,8 @@ export function TypographyCanvas({
 
     if (guides.baselineGrid) {
       const lineHeightPx = guideTypography.fontSize * guideTypography.lineHeight;
-      backgrounds.push(`linear-gradient(to bottom, transparent ${lineHeightPx - 1}px, rgba(59, 130, 246, 0.4) ${lineHeightPx - 1}px, rgba(59, 130, 246, 0.4) ${lineHeightPx}px)`);
+      const gridColor = layout.strokeColor || '#FBD152';
+      backgrounds.push(`linear-gradient(to bottom, transparent ${lineHeightPx - 1}px, ${gridColor} ${lineHeightPx - 1}px, ${gridColor} ${lineHeightPx}px)`);
       sizes.push(`100% ${lineHeightPx}px`);
     }
 
@@ -252,14 +261,20 @@ export function TypographyCanvas({
         onClick={handleCanvasClick}
       >
         <div
-          className="rounded-lg shadow-lg transition-all duration-300 overflow-hidden border border-amber-200"
-          style={{ width: `min(100%, ${viewportWidth}px)` }}
+          className="rounded-lg shadow-lg transition-all duration-300 overflow-hidden border"
+          style={{ 
+            width: `min(100%, ${viewportWidth}px)`,
+            borderColor: layout.strokeColor || '#FBD152'
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Viewport Indicator */}
           <div
-            className="flex items-center justify-between px-4 py-2 border-b border-amber-300"
-            style={{ backgroundColor: '#FBD152' }}
+            className="flex items-center justify-between px-4 py-2 border-b"
+            style={{ 
+              backgroundColor: layout.strokeColor || '#FBD152',
+              borderColor: layout.strokeColor || '#FBD152'
+            }}
           >
             <div className="flex items-center gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
