@@ -117,9 +117,24 @@ export function ColorPicker({ value, onChange, defaultValue }: ColorPickerProps)
       <div className="flex items-center gap-2">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full h-8 rounded-md border border-zinc-300 shadow-inner flex-shrink-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-6 h-6 rounded border border-zinc-300 shadow-inner flex-shrink-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
           style={{ backgroundColor: value }}
           aria-label="Pick color"
+        />
+        <input
+          type="text"
+          value={value.toUpperCase()}
+          onChange={(e) => {
+            const val = e.target.value;
+            // Allow typing just the hash or partial hex
+            if (/^#[0-9A-Fa-f]{0,6}$/.test(val)) {
+              // Update parent only if full valid 6-char hex
+              if (val.length === 7) onChange(val);
+            }
+          }}
+          className="w-full px-2 py-1 bg-white border border-zinc-300 rounded text-xs text-zinc-900 font-mono uppercase outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6]"
+          placeholder="#000000"
+          maxLength={7}
         />
       </div>
 
