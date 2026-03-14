@@ -17,7 +17,8 @@ import { ColorPicker } from '../ui/ColorPicker';
 import {
   CellphoneLine, PadLine, ComputerLine,
   CellphoneFill, PadFill, ComputerFill,
-  AlignTopLine, AlignVerticalCenterLine, AlignArrowDownLine
+  AlignTopLine, AlignVerticalCenterLine, AlignArrowDownLine,
+  AlignTopFill, AlignVerticalCenterFill, AlignArrowDownFill
 } from '@mingcute/react';
 
 interface PreviewModesProps {
@@ -138,9 +139,9 @@ export function PreviewModes({
                   }`}
                 >
                   <span className="flex items-center justify-center w-4 h-4 [&>svg]:w-full [&>svg]:h-full">
-                    {option.value === 'start' && <AlignTopLine />}
-                    {option.value === 'center' && <AlignVerticalCenterLine />}
-                    {option.value === 'stretch' && <AlignArrowDownLine />}
+                    {option.value === 'start' && (layout.alignment === 'start' ? <AlignTopFill /> : <AlignTopLine />)}
+                    {option.value === 'center' && (layout.alignment === 'center' ? <AlignVerticalCenterFill /> : <AlignVerticalCenterLine />)}
+                    {option.value === 'stretch' && (layout.alignment === 'stretch' ? <AlignArrowDownFill /> : <AlignArrowDownLine />)}
                   </span>
                   <span className="hidden sm:inline">{option.label}</span>
                 </button>
