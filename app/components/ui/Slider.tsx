@@ -159,6 +159,26 @@ export function Slider({
           />
         )}
 
+        {/* Motion Thumb for snappy spring interaction */}
+        <motion.div
+          className={`absolute h-4 w-4 rounded-full bg-white border-2 z-30 shadow-sm ${isSliding ? 'border-blue-500 ring-4 ring-blue-500/20' : 'border-zinc-500'
+            }`}
+          style={{
+            left: `calc(${percentage}% - 8px)`,
+            top: '50%',
+            y: '-50%'
+          }}
+          animate={{
+            scale: isSliding ? 1.15 : 1,
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 500,
+            damping: 25,
+            mass: 0.5
+          }}
+        />
+
         <input
           id={id}
           type="range"
@@ -171,71 +191,10 @@ export function Slider({
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          className={`w-full h-2.5 rounded-full appearance-none cursor-pointer relative z-30 transition-all duration-150 bg-transparent ${isSliding ? 'slider-track-active' : 'slider-track'
-            }`}
+          className="absolute w-full h-full opacity-0 cursor-pointer z-40"
         />
       </div>
 
-      <style jsx>{`
-        .slider-track::-webkit-slider-thumb {
-          appearance: none;
-          width: 14px;
-          height: 14px;
-          border-radius: 50%;
-          background: #ffffff;
-          cursor: pointer;
-          border: 2px solid #71717a;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-          transition: all 0.15s ease;
-          position: relative;
-          z-index: 20;
-        }
-        .slider-track::-webkit-slider-thumb:hover {
-          transform: scale(1.1);
-          border-color: #52525b;
-        }
-        .slider-track::-moz-range-thumb {
-          width: 14px;
-          height: 14px;
-          border-radius: 50%;
-          background: #ffffff;
-          cursor: pointer;
-          border: 2px solid #71717a;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-          transition: all 0.15s ease;
-          position: relative;
-          z-index: 20;
-        }
-        .slider-track::-moz-range-thumb:hover {
-          transform: scale(1.1);
-          border-color: #52525b;
-        }
-        .slider-track-active::-webkit-slider-thumb {
-          appearance: none;
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
-          background: #ffffff;
-          cursor: pointer;
-          border: 2px solid #3b82f6;
-          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-          transition: all 0.15s ease;
-          position: relative;
-          z-index: 20;
-        }
-        .slider-track-active::-moz-range-thumb {
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
-          background: #ffffff;
-          cursor: pointer;
-          border: 2px solid #3b82f6;
-          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-          transition: all 0.15s ease;
-          position: relative;
-          z-index: 20;
-        }
-      `}</style>
     </div>
   );
 }
