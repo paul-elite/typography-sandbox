@@ -108,7 +108,7 @@ export function Slider({
             disabled={isAtRecommended || recommendedValue === undefined || isSliding}
             className={`p-1 rounded transition-colors ${isAtRecommended || recommendedValue === undefined || isSliding
               ? 'text-zinc-300 cursor-not-allowed'
-              : 'text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100'
+              : 'text-blue-500 hover:text-blue-600 hover:bg-blue-50'
               }`}
             title="Snap to recommended"
             aria-label={`Snap ${label} to recommended value`}
