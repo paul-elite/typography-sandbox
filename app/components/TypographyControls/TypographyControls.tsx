@@ -22,7 +22,6 @@ import {
 interface TypographyControlsProps {
   typography: TypographyState | null;
   selectedLayer: TextLayer | null;
-  onSelectLayer: (layer: TextLayer | null) => void;
   recommendations: TypographyRecommendations | null;
   onUpdate: <K extends keyof TypographyState>(key: K, value: TypographyState[K]) => void;
   onResetAll: () => void;
@@ -34,11 +33,11 @@ interface TypographyControlsProps {
   getFontWeights: (font: string) => number[];
 }
 
-const LAYER_TABS: Array<{ value: TextLayer; label: string }> = [
-  { value: 'heading', label: 'Heading' },
-  { value: 'paragraph', label: 'Paragraph' },
-  { value: 'caption', label: 'Caption' },
-];
+const LAYER_LABELS: Record<TextLayer, string> = {
+  heading: 'Heading',
+  paragraph: 'Paragraph',
+  caption: 'Caption',
+};
 
 const DEFAULT_TYPOGRAPHY_BY_LAYER: Record<TextLayer, TypographyState> = {
   heading: DEFAULT_HEADING_TYPOGRAPHY,
@@ -49,7 +48,6 @@ const DEFAULT_TYPOGRAPHY_BY_LAYER: Record<TextLayer, TypographyState> = {
 export function TypographyControls({
   typography,
   selectedLayer,
-  onSelectLayer,
   recommendations,
   onUpdate,
   onResetAll,
@@ -66,9 +64,16 @@ export function TypographyControls({
   return (
     <div className="bg-white rounded-xl p-5 space-y-6 shadow-[0px_0px_0px_0.5px_rgba(0,0,0,0.1)]">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-zinc-800">
-          Typography Controls
-        </h2>
+        <div className="flex items-center gap-2">
+          <h2 className="text-sm font-semibold text-zinc-800">
+            Typography Controls
+          </h2>
+          {selectedLayer && (
+            <span className="text-xs font-medium text-zinc-500 bg-zinc-100 px-2 py-1 rounded">
+              {LAYER_LABELS[selectedLayer]}
+            </span>
+          )}
+        </div>
         {selectedLayer && (
           <button
             onClick={onResetAll}
@@ -77,23 +82,6 @@ export function TypographyControls({
             Reset Layer
           </button>
         )}
-      </div>
-
-      {/* Layer Selector Tabs */}
-      <div className="flex rounded-lg bg-zinc-100 p-1">
-        {LAYER_TABS.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => onSelectLayer(tab.value)}
-            className={`flex-1 px-3 py-2 text-xs font-medium rounded-md transition-all ${
-              selectedLayer === tab.value
-                ? 'bg-zinc-900 text-white shadow-sm'
-                : 'text-zinc-600 hover:text-zinc-800 hover:bg-zinc-200'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
       </div>
 
       {/* No Selection State */}
@@ -111,7 +99,7 @@ export function TypographyControls({
             </svg>
           </div>
           <p className="text-sm text-zinc-500 mb-1">No layer selected</p>
-          <p className="text-xs text-zinc-400">Click on a text layer in the canvas or select one above</p>
+          <p className="text-xs text-zinc-400">Click on a text layer in the canvas to edit it</p>
         </div>
       ) : (
         <div className="space-y-5">

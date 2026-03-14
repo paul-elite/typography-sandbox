@@ -101,7 +101,6 @@ export default function Home() {
               <TypographyControls
                 typography={typography}
                 selectedLayer={selectedLayer}
-                onSelectLayer={setSelectedLayer}
                 recommendations={recommendations}
                 onUpdate={updateTypography}
                 onResetAll={resetTypography}
