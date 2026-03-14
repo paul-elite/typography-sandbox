@@ -16,6 +16,7 @@ interface TypographyCanvasProps {
   layerTypography: LayerTypography;
   selectedLayer: TextLayer | null;
   onSelectLayer: (layer: TextLayer | null) => void;
+  onTypographyChange?: <K extends keyof TypographyState>(key: K, value: TypographyState[K]) => void;
   layout: LayoutSettings;
   onLayoutChange: <K extends keyof LayoutSettings>(key: K, value: LayoutSettings[K]) => void;
   layerContent: LayerContent;
@@ -106,6 +107,7 @@ function LayerText({
   content,
   isSelected,
   onSelect,
+  onChange,
   isFontLoaded,
 }: {
   layer: TextLayer;
@@ -113,8 +115,43 @@ function LayerText({
   content: string;
   isSelected: boolean;
   onSelect: () => void;
+  onChange?: <K extends keyof TypographyState>(key: K, value: TypographyState[K]) => void;
   isFontLoaded: boolean;
 }) {
+  const [isResizing, setIsResizing] = useState(false);
+  const resizeStartRef = useRef<{ x: number; startWidthCH: number } | null>(null);
+
+  const handleResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    resizeStartRef.current = { x: e.clientX, startWidthCH: typography.paragraphWidth };
+    setIsResizing(true);
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      if (!resizeStartRef.current || !onChange) return;
+      
+      const deltaX = moveEvent.clientX - resizeStartRef.current.x;
+      // Rough approximation: 1ch width ≈ fontSize * 0.5 pixels
+      const chPx = typography.fontSize * 0.5;
+      const deltaCh = deltaX / chPx;
+      
+      let newWidth = Math.round(resizeStartRef.current.startWidthCH + deltaCh);
+      newWidth = Math.max(10, Math.min(200, newWidth)); // sensible limits
+      
+      onChange('paragraphWidth', newWidth);
+    };
+
+    const handleMouseUp = () => {
+      resizeStartRef.current = null;
+      setIsResizing(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  }, [typography.paragraphWidth, typography.fontSize, onChange]);
+
   const textStyle = useMemo(() => ({
     fontFamily: isFontLoaded ? `'${typography.fontFamily}', sans-serif` : 'system-ui, sans-serif',
     fontSize: `${typography.fontSize}px`,
@@ -152,10 +189,23 @@ function LayerText({
       </div>
 
       <div
-        className="whitespace-pre-wrap break-words transition-all duration-150"
+        className={`whitespace-pre-wrap break-words relative ${!isResizing ? 'transition-all duration-150' : ''}`}
         style={textStyle}
       >
         {content}
+        {isSelected && onChange && (
+          <div
+            className="absolute -right-3 top-0 bottom-0 w-6 cursor-col-resize flex justify-center items-center group/resizer z-10"
+            onMouseDown={handleResizeStart}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={`w-1 h-8 rounded-full transition-colors ${isResizing ? 'bg-blue-600' : 'bg-transparent group-hover/resizer:bg-blue-400'}`} />
+            
+            <div className={`absolute top-1/2 -translate-y-1/2 left-full ml-1 px-1.5 py-0.5 bg-blue-600 text-white text-[10px] rounded transition-opacity whitespace-nowrap pointer-events-none ${isResizing ? 'opacity-100' : 'opacity-0'}`}>
+              {typography.paragraphWidth}ch
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -165,6 +215,7 @@ export function TypographyCanvas({
   layerTypography,
   selectedLayer,
   onSelectLayer,
+  onTypographyChange,
   layout,
   onLayoutChange,
   layerContent,
@@ -312,6 +363,7 @@ export function TypographyCanvas({
               content={layerContent.heading}
               isSelected={selectedLayer === 'heading'}
               onSelect={() => onSelectLayer('heading')}
+              onChange={selectedLayer === 'heading' ? onTypographyChange : undefined}
               isFontLoaded={isFontLoaded(layerTypography.heading.fontFamily)}
             />
 
@@ -329,6 +381,7 @@ export function TypographyCanvas({
               content={layerContent.paragraph}
               isSelected={selectedLayer === 'paragraph'}
               onSelect={() => onSelectLayer('paragraph')}
+              onChange={selectedLayer === 'paragraph' ? onTypographyChange : undefined}
               isFontLoaded={isFontLoaded(layerTypography.paragraph.fontFamily)}
             />
 
@@ -346,6 +399,7 @@ export function TypographyCanvas({
               content={layerContent.caption}
               isSelected={selectedLayer === 'caption'}
               onSelect={() => onSelectLayer('caption')}
+              onChange={selectedLayer === 'caption' ? onTypographyChange : undefined}
               isFontLoaded={isFontLoaded(layerTypography.caption.fontFamily)}
             />
           </div>

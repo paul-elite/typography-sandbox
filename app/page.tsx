@@ -125,6 +125,7 @@ export default function Home() {
               layerTypography={layerTypography}
               selectedLayer={selectedLayer}
               onSelectLayer={setSelectedLayer}
+              onTypographyChange={updateTypography}
               layout={layout}
               onLayoutChange={updateLayout}
               layerContent={layerContent}
