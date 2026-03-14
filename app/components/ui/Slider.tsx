@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useId, useMemo, useState } from 'react';
+import { useCallback, useId, useState } from 'react';
 
 interface SliderProps {
   label: string;
@@ -71,18 +71,9 @@ export function Slider({
   // Calculate percentages for slider gradient and recommended marker
   const percentage = ((value - min) / (max - min)) * 100;
 
-  const recommendedPercentage = useMemo(() => {
-    if (recommendedValue === undefined) return null;
-    const clamped = Math.max(min, Math.min(max, recommendedValue));
-    return ((clamped - min) / (max - min)) * 100;
-  }, [recommendedValue, min, max]);
-
   // Colors for active range
-  const activeColor = isSliding ? '#3b82f6' : '#71717a';
+  const activeColor = '#3b82f6';
   const trackBgColor = '#e4e4e7';
-
-  // Hide ghost thumb when sliding (it follows the main thumb)
-  const showGhostThumb = recommendedPercentage !== null && !isAtRecommended && !isSliding;
 
   return (
     <div className="space-y-2">
@@ -134,20 +125,8 @@ export function Slider({
         </div>
       </div>
 
-      {/* Slider track with ghost recommended thumb */}
+      {/* Slider track with gradient logic */}
       <div className="relative h-4 flex items-center">
-        {/* Ghost thumb for recommended value */}
-        {showGhostThumb && (
-          <button
-            onClick={onApplyRecommended}
-            className="absolute top-1/2 -translate-y-1/2 z-[5] cursor-pointer group transition-all duration-200"
-            style={{ left: `calc(${recommendedPercentage}% - 7px)` }}
-            title={`Click to apply recommended value`}
-            aria-label={`Apply recommended value`}
-          >
-            <div className="w-[14px] h-[14px] rounded-full bg-zinc-300 border-2 border-zinc-400 transition-all group-hover:bg-zinc-400 group-hover:border-zinc-500 group-hover:scale-110" />
-          </button>
-        )}
 
         <input
           id={id}
