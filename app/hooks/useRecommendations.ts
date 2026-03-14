@@ -5,6 +5,7 @@ import { TypographyState } from '../types/typography';
 
 export interface TypographyRecommendations {
   fontSize: [number, number];
+  fontWeight: [number, number];
   letterSpacing: [number, number];
   wordSpacing: [number, number];
   lineHeight: [number, number];
@@ -19,6 +20,34 @@ export function useRecommendations(
 ): TypographyRecommendations {
   return useMemo(() => {
     const { fontSize, fontWeight, letterSpacing, lineHeight, paragraphWidth, wordSpacing, textAlign } = typography;
+
+    // ============================================
+    // FONT WEIGHT recommendation
+    // ============================================
+    let recommendedFontWeight: number;
+    if (activeSlider === 'fontWeight') {
+      recommendedFontWeight = fontWeight;
+    } else {
+      // Base from font size
+      if (fontSize <= 14) {
+        recommendedFontWeight = 400;
+      } else if (fontSize <= 24) {
+        recommendedFontWeight = 500;
+      } else if (fontSize <= 48) {
+        recommendedFontWeight = 600;
+      } else {
+        recommendedFontWeight = 700;
+      }
+
+      // Adjust for letter spacing
+      if (letterSpacing < -0.02) {
+        recommendedFontWeight += 100;
+      } else if (letterSpacing > 0.05) {
+        recommendedFontWeight -= 100;
+      }
+
+      recommendedFontWeight = Math.max(100, Math.min(900, recommendedFontWeight));
+    }
 
     // ============================================
     // FONT SIZE recommendation
@@ -195,6 +224,10 @@ export function useRecommendations(
       fontSize: [
         Math.max(8, recommendedFontSize - 2),
         Math.min(120, recommendedFontSize + 2)
+      ],
+      fontWeight: [
+        Math.max(100, recommendedFontWeight - 100),
+        Math.min(900, recommendedFontWeight + 100)
       ],
       letterSpacing: [
         Math.max(-0.2, Math.round((recommendedLetterSpacing - 0.01) * 100) / 100),

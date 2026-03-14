@@ -63,25 +63,22 @@ export function TypographyControls({
         />
 
         {/* Font Weight */}
-        <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-2">
-            Font Weight
-          </label>
-          <div className="flex flex-wrap gap-1.5">
-            {availableWeights.map((weight) => (
-              <button
-                key={weight}
-                onClick={() => onUpdate('fontWeight', weight)}
-                className={`px-2.5 py-1.5 text-xs rounded-md transition-colors ${typography.fontWeight === weight
-                  ? 'bg-zinc-900 text-white font-medium'
-                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
-                  }`}
-              >
-                {weight}
-              </button>
-            ))}
-          </div>
-        </div>
+        <Slider
+          label="Font Weight"
+          value={typography.fontWeight}
+          min={availableWeights.length > 0 ? Math.min(...availableWeights) : 100}
+          max={availableWeights.length > 0 ? Math.max(...availableWeights) : 900}
+          step={100}
+          onChange={(value) => onUpdate('fontWeight', value)}
+          defaultValue={DEFAULT_TYPOGRAPHY.fontWeight}
+          recommendedValue={recommendations.fontWeight}
+          onApplyRecommended={() => {
+            const midpoint = (recommendations.fontWeight[0] + recommendations.fontWeight[1]) / 2;
+            onUpdate('fontWeight', Math.round(midpoint / 100) * 100);
+          }}
+          onSlideStart={() => onActiveSliderChange('fontWeight')}
+          onSlideEnd={() => onActiveSliderChange(null)}
+        />
 
         {/* Font Size */}
         <Slider
