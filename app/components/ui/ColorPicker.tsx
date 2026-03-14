@@ -83,7 +83,12 @@ function hslToHex(h: number, s: number, l: number): string {
 
 export function ColorPicker({ value, onChange, defaultValue }: ColorPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [inputValue, setInputValue] = useState(value);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -123,14 +128,19 @@ export function ColorPicker({ value, onChange, defaultValue }: ColorPickerProps)
         />
         <input
           type="text"
-          value={value.toUpperCase()}
+          value={inputValue.toUpperCase()}
           onChange={(e) => {
             const val = e.target.value;
             // Allow typing just the hash or partial hex
             if (/^#[0-9A-Fa-f]{0,6}$/.test(val)) {
+              setInputValue(val);
               // Update parent only if full valid 6-char hex
               if (val.length === 7) onChange(val);
             }
+          }}
+          onBlur={() => {
+            // Reset to last valid color on blur if input is incomplete
+            setInputValue(value);
           }}
           className="w-full px-2 py-1 bg-white border border-zinc-300 rounded text-xs text-zinc-900 font-mono uppercase outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6]"
           placeholder="#000000"
