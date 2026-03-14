@@ -100,18 +100,17 @@ export function Slider({
               min={min}
               max={max}
               step={step}
-              className="w-16 px-2 py-1 text-xs text-right bg-white border border-zinc-300 rounded text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="w-16 px-2 py-1 text-xs text-right bg-white border border-zinc-300 rounded text-zinc-800 outline-none focus:border-blue-500 focus:shadow-[0_0_0_0.5px_#3b82f6] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
             {unit && <span className="ml-1 text-xs text-zinc-500">{unit}</span>}
           </div>
           <button
             onClick={onApplyRecommended}
             disabled={isAtRecommended || recommendedValue === undefined || isSliding}
-            className={`p-1 rounded transition-colors ${
-              isAtRecommended || recommendedValue === undefined || isSliding
+            className={`p-1 rounded transition-colors ${isAtRecommended || recommendedValue === undefined || isSliding
                 ? 'text-zinc-300 cursor-not-allowed'
                 : 'text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100'
-            }`}
+              }`}
             title="Snap to recommended"
             aria-label={`Snap ${label} to recommended value`}
           >
@@ -161,9 +160,8 @@ export function Slider({
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          className={`w-full h-1.5 rounded-full appearance-none cursor-pointer relative z-10 transition-all duration-150 ${
-            isSliding ? 'slider-track-active' : 'slider-track'
-          }`}
+          className={`w-full h-1.5 rounded-full appearance-none cursor-pointer relative z-10 transition-all duration-150 ${isSliding ? 'slider-track-active' : 'slider-track'
+            }`}
           style={{
             background: `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${percentage}%, ${trackBgColor} ${percentage}%, ${trackBgColor} 100%)`,
           }}
