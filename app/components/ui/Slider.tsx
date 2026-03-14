@@ -100,7 +100,7 @@ export function Slider({
               min={min}
               max={max}
               step={step}
-              className="w-16 px-2 py-1 text-xs text-right bg-white border border-zinc-300 rounded text-zinc-800 outline-none focus:border-blue-500 focus:shadow-[0_0_0_0.5px_#3b82f6] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="w-16 px-2 py-1 text-xs text-right bg-white border border-zinc-300 rounded text-zinc-800 outline-none focus:border-transparent focus:shadow-[0_0_0_0.5px_#3b82f6] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
             {unit && <span className="ml-1 text-xs text-zinc-500">{unit}</span>}
           </div>
@@ -108,8 +108,8 @@ export function Slider({
             onClick={onApplyRecommended}
             disabled={isAtRecommended || recommendedValue === undefined || isSliding}
             className={`p-1 rounded transition-colors ${isAtRecommended || recommendedValue === undefined || isSliding
-                ? 'text-zinc-300 cursor-not-allowed'
-                : 'text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100'
+              ? 'text-zinc-300 cursor-not-allowed'
+              : 'text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100'
               }`}
             title="Snap to recommended"
             aria-label={`Snap ${label} to recommended value`}
