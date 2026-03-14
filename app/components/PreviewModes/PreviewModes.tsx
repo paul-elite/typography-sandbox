@@ -13,6 +13,8 @@ interface PreviewModesProps {
   onToggleGuide: (guide: keyof TypographyGuides) => void;
 }
 
+import { CellphoneLine, PadLine, ComputerLine } from '@mingcute/react';
+
 const previewModes: Array<{ value: PreviewMode; label: string }> = [
   { value: 'word', label: 'Word' },
   { value: 'sentence', label: 'Sentence' },
@@ -20,10 +22,10 @@ const previewModes: Array<{ value: PreviewMode; label: string }> = [
   { value: 'custom', label: 'Custom' },
 ];
 
-const viewportOptions: Array<{ value: ViewportPreset; label: string; icon: string }> = [
-  { value: 'mobile', label: 'Mobile', icon: '📱' },
-  { value: 'tablet', label: 'Tablet', icon: '⬜' },
-  { value: 'desktop', label: 'Desktop', icon: '🖥️' },
+const viewportOptions: Array<{ value: ViewportPreset; label: string; icon: React.ReactNode }> = [
+  { value: 'mobile', label: 'Mobile', icon: <CellphoneLine /> },
+  { value: 'tablet', label: 'Tablet', icon: <PadLine /> },
+  { value: 'desktop', label: 'Desktop', icon: <ComputerLine /> },
 ];
 
 const guideOptions: Array<{ value: keyof TypographyGuides; label: string }> = [
@@ -58,11 +60,10 @@ export function PreviewModes({
             <button
               key={mode.value}
               onClick={() => onPreviewModeChange(mode.value)}
-              className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
-                previewMode === mode.value
+              className={`px-3 py-1.5 text-xs rounded-md transition-colors ${previewMode === mode.value
                   ? 'bg-zinc-900 text-white font-medium'
                   : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
-              }`}
+                }`}
             >
               {mode.label}
             </button>
@@ -96,11 +97,10 @@ export function PreviewModes({
               key={option.value}
               onClick={() => onViewportChange(option.value)}
               title={`${option.label} (${VIEWPORT_PRESETS[option.value].width}px)`}
-              className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-md transition-colors ${
-                viewport === option.value
+              className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-md transition-colors ${viewport === option.value
                   ? 'bg-zinc-900 text-white font-medium'
                   : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
-              }`}
+                }`}
             >
               <span>{option.icon}</span>
               <span className="hidden sm:inline">{option.label}</span>
@@ -131,11 +131,10 @@ export function PreviewModes({
                   className="sr-only"
                 />
                 <div
-                  className={`w-4 h-4 rounded border-2 transition-colors ${
-                    guides[guide.value]
+                  className={`w-4 h-4 rounded border-2 transition-colors ${guides[guide.value]
                       ? 'bg-blue-500 border-blue-500'
                       : 'bg-white border-zinc-300 group-hover:border-zinc-400'
-                  }`}
+                    }`}
                 >
                   {guides[guide.value] && (
                     <svg
