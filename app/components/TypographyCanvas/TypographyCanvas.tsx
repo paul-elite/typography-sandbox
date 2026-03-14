@@ -184,8 +184,19 @@ export function TypographyCanvas({
 
     if (guides.baselineGrid) {
       const lineHeightPx = guideTypography.fontSize * guideTypography.lineHeight;
-      const gridColor = layout.strokeColor || '#FBD152';
-      backgrounds.push(`linear-gradient(to bottom, transparent ${lineHeightPx - 1}px, ${gridColor} ${lineHeightPx - 1}px, ${gridColor} ${lineHeightPx}px)`);
+      const hexColor = layout.strokeColor || '#FBD152';
+      
+      // Convert hex to rgba to apply 50% opacity
+      let r = 251, g = 209, b = 82; // Default #FBD152
+      const hexMatch = hexColor.match(/^#?([A-Fa-f\d]{2})([A-Fa-f\d]{2})([A-Fa-f\d]{2})$/);
+      if (hexMatch) {
+         r = parseInt(hexMatch[1], 16);
+         g = parseInt(hexMatch[2], 16);
+         b = parseInt(hexMatch[3], 16);
+      }
+      const gridColorAlpha = `rgba(${r}, ${g}, ${b}, 0.5)`;
+
+      backgrounds.push(`linear-gradient(to bottom, transparent ${lineHeightPx - 1}px, ${gridColorAlpha} ${lineHeightPx - 1}px, ${gridColorAlpha} ${lineHeightPx}px)`);
       sizes.push(`100% ${lineHeightPx}px`);
     }
 

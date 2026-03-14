@@ -114,35 +114,13 @@ export function ColorPicker({ value, onChange, defaultValue }: ColorPickerProps)
   return (
     <div className="relative space-y-3" ref={containerRef}>
       {/* Color Preview & Hex */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-10 h-10 rounded-lg border border-zinc-300 shadow-inner flex-shrink-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full h-8 rounded-md border border-zinc-300 shadow-inner flex-shrink-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
           style={{ backgroundColor: value }}
           aria-label="Pick color"
         />
-        <input
-          type="text"
-          value={value.toUpperCase()}
-          onChange={(e) => {
-            const val = e.target.value;
-            if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
-              onChange(val);
-            }
-          }}
-          className="flex-1 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-900 font-mono uppercase outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6]"
-          placeholder="#000000"
-          maxLength={7}
-        />
-        {isModified && defaultValue && (
-          <button
-            onClick={() => onChange(defaultValue)}
-            className="text-xs text-zinc-500 hover:text-zinc-700 transition-colors px-2 py-1 rounded hover:bg-zinc-100 flex-shrink-0"
-            title="Reset to default"
-          >
-            Reset
-          </button>
-        )}
       </div>
 
       {/* HSL Sliders Popover */}

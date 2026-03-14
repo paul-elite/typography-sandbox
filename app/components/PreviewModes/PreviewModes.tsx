@@ -146,28 +146,31 @@ export function PreviewModes({
             </div>
           </div>
 
-          {/* Background Color */}
-          <div>
-            <label className="block text-xs text-zinc-500 mb-2">
-              Background Color
-            </label>
-            <ColorPicker
-              value={layout.backgroundColor}
-              onChange={(color) => onLayoutChange('backgroundColor', color)}
-              defaultValue={DEFAULT_LAYOUT.backgroundColor}
-            />
-          </div>
+          {/* Background and Stroke Colors */}
+          <div className="flex items-center gap-3">
+            {/* Background Color */}
+            <div className="flex-1 min-w-0">
+              <label className="block text-xs text-zinc-500 mb-2 truncate">
+                Background
+              </label>
+              <ColorPicker
+                value={layout.backgroundColor}
+                onChange={(color) => onLayoutChange('backgroundColor', color)}
+                defaultValue={DEFAULT_LAYOUT.backgroundColor}
+              />
+            </div>
 
-          {/* Stroke Color */}
-          <div>
-            <label className="block text-xs text-zinc-500 mb-2">
-              Stroke Color
-            </label>
-            <ColorPicker
-              value={layout.strokeColor || '#FBD152'}
-              onChange={(color) => onLayoutChange('strokeColor', color)}
-              defaultValue={DEFAULT_LAYOUT.strokeColor}
-            />
+            {/* Stroke Color */}
+            <div className="flex-1 min-w-0">
+              <label className="block text-xs text-zinc-500 mb-2 truncate">
+                Stroke
+              </label>
+              <ColorPicker
+                value={layout.strokeColor || '#FBD152'}
+                onChange={(color) => onLayoutChange('strokeColor', color)}
+                defaultValue={DEFAULT_LAYOUT.strokeColor}
+              />
+            </div>
           </div>
         </div>
       </CollapsibleSection>
