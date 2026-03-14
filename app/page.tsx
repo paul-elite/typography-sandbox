@@ -49,8 +49,9 @@ export default function Home() {
       <header className="border-b border-zinc-200 bg-white">
         <div className="max-w-[1800px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.png"
+              src="/logo.svg"
               alt="Design Tales Logo"
               className="h-10 w-auto object-contain"
             />
