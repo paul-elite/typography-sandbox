@@ -98,7 +98,7 @@ export function Slider({
               min={min}
               max={max}
               step={step}
-              className="w-16 px-2 py-1 text-xs text-right bg-white border border-zinc-300 rounded text-zinc-800 outline-none focus:outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="w-16 px-2 py-1 text-xs text-right bg-white border-[1px] border-zinc-300 rounded text-zinc-800 outline-none focus:outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               style={{ outline: 'none' }}
             />
             {unit && <span className="ml-1 text-xs text-zinc-500">{unit}</span>}

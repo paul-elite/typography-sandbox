@@ -149,6 +149,7 @@ export function TypographyControls({
           min={0.8}
           max={3}
           step={0.05}
+          unit="pt"
           onChange={(value) => onUpdate('lineHeight', value)}
           defaultValue={DEFAULT_TYPOGRAPHY.lineHeight}
           recommendedValue={recommendations.lineHeight}
