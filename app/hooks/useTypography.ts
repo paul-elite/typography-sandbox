@@ -24,7 +24,7 @@ const DEFAULT_LAYER_TYPOGRAPHY: LayerTypography = {
 
 export function useTypography() {
   const [layerTypography, setLayerTypography] = useState<LayerTypography>(DEFAULT_LAYER_TYPOGRAPHY);
-  const [selectedLayer, setSelectedLayer] = useState<TextLayer>('paragraph');
+  const [selectedLayer, setSelectedLayer] = useState<TextLayer | null>('paragraph');
   const [layout, setLayout] = useState<LayoutSettings>(DEFAULT_LAYOUT);
   const [layerContent, setLayerContent] = useState<LayerContent>({ ...DEFAULT_LAYER_CONTENT });
   const [viewport, setViewport] = useState<ViewportPreset>('desktop');
@@ -34,13 +34,14 @@ export function useTypography() {
     xHeight: false,
   });
 
-  // Get the current layer's typography for convenience
-  const typography = layerTypography[selectedLayer];
+  // Get the current layer's typography for convenience (default to paragraph if none selected)
+  const typography = selectedLayer ? layerTypography[selectedLayer] : null;
 
   const updateTypography = useCallback(<K extends keyof TypographyState>(
     key: K,
     value: TypographyState[K]
   ) => {
+    if (!selectedLayer) return;
     setLayerTypography(prev => ({
       ...prev,
       [selectedLayer]: { ...prev[selectedLayer], [key]: value }
@@ -48,6 +49,7 @@ export function useTypography() {
   }, [selectedLayer]);
 
   const resetTypography = useCallback(() => {
+    if (!selectedLayer) return;
     // Reset only the selected layer
     const defaults: Record<TextLayer, TypographyState> = {
       heading: DEFAULT_HEADING_TYPOGRAPHY,
@@ -61,6 +63,7 @@ export function useTypography() {
   }, [selectedLayer]);
 
   const resetSingleValue = useCallback(<K extends keyof TypographyState>(key: K) => {
+    if (!selectedLayer) return;
     const defaults: Record<TextLayer, TypographyState> = {
       heading: DEFAULT_HEADING_TYPOGRAPHY,
       paragraph: DEFAULT_PARAGRAPH_TYPOGRAPHY,
@@ -88,6 +91,7 @@ export function useTypography() {
   }, []);
 
   const readingComfort = useMemo(() => {
+    if (!typography) return 0;
     const { fontSize, lineHeight, paragraphWidth, letterSpacing, wordSpacing, fontWeight, textAlign } = typography;
 
     let score = 100;

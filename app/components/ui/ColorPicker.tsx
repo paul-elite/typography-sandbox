@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ColorPickerProps {
   value: string; // hex color
@@ -81,6 +82,19 @@ function hslToHex(h: number, s: number, l: number): string {
 }
 
 export function ColorPicker({ value, onChange, defaultValue }: ColorPickerProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const hsl = useMemo(() => hexToHsl(value), [value]);
 
   const handleHueChange = useCallback((newHue: number) => {
@@ -98,12 +112,14 @@ export function ColorPicker({ value, onChange, defaultValue }: ColorPickerProps)
   const isModified = defaultValue && value.toLowerCase() !== defaultValue.toLowerCase();
 
   return (
-    <div className="space-y-3">
+    <div className="relative space-y-3" ref={containerRef}>
       {/* Color Preview & Hex */}
       <div className="flex items-center gap-3">
-        <div
-          className="w-10 h-10 rounded-lg border border-zinc-300 shadow-inner flex-shrink-0"
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-10 h-10 rounded-lg border border-zinc-300 shadow-inner flex-shrink-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
           style={{ backgroundColor: value }}
+          aria-label="Pick color"
         />
         <input
           type="text"
@@ -129,8 +145,18 @@ export function ColorPicker({ value, onChange, defaultValue }: ColorPickerProps)
         )}
       </div>
 
-      {/* Hue Slider */}
-      <div className="space-y-1">
+      {/* HSL Sliders Popover */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            className="absolute left-0 top-full mt-2 w-full p-4 bg-white border border-zinc-200 rounded-xl shadow-[0px_4px_16px_rgba(0,0,0,0.1)] z-50 space-y-4"
+          >
+            {/* Hue Slider */}
+            <div className="space-y-1">
         <div className="flex justify-between items-center">
           <label className="text-xs text-zinc-500">Hue</label>
           <span className="text-xs text-zinc-600 font-mono">{hsl.h}°</span>
@@ -200,6 +226,9 @@ export function ColorPicker({ value, onChange, defaultValue }: ColorPickerProps)
           }}
         />
       </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

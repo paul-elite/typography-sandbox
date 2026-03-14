@@ -14,8 +14,8 @@ import {
 
 interface TypographyCanvasProps {
   layerTypography: LayerTypography;
-  selectedLayer: TextLayer;
-  onSelectLayer: (layer: TextLayer) => void;
+  selectedLayer: TextLayer | null;
+  onSelectLayer: (layer: TextLayer | null) => void;
   layout: LayoutSettings;
   layerContent: LayerContent;
   viewport: ViewportPreset;
@@ -63,7 +63,10 @@ function LayerText({
           ? 'ring-2 ring-blue-500 bg-blue-50/50'
           : 'hover:ring-1 hover:ring-zinc-300 hover:bg-zinc-50/50'
       }`}
-      onClick={onSelect}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect();
+      }}
       style={{ padding: '8px' }}
     >
       {/* Layer label */}
@@ -99,8 +102,8 @@ export function TypographyCanvas({
 }: TypographyCanvasProps) {
   const viewportWidth = VIEWPORT_PRESETS[viewport].width;
 
-  // Use the selected layer's typography for guide calculations
-  const selectedTypography = layerTypography[selectedLayer];
+  // Use the selected layer's typography for guide calculations, default to paragraph
+  const guideTypography = selectedLayer ? layerTypography[selectedLayer] : layerTypography.paragraph;
 
   const combinedGuideStyle = useMemo(() => {
     const styles: React.CSSProperties = {};
@@ -108,21 +111,21 @@ export function TypographyCanvas({
     const sizes: string[] = [];
 
     if (guides.baselineGrid) {
-      const lineHeightPx = selectedTypography.fontSize * selectedTypography.lineHeight;
+      const lineHeightPx = guideTypography.fontSize * guideTypography.lineHeight;
       backgrounds.push(`linear-gradient(to bottom, transparent ${lineHeightPx - 1}px, rgba(59, 130, 246, 0.4) ${lineHeightPx - 1}px, rgba(59, 130, 246, 0.4) ${lineHeightPx}px)`);
       sizes.push(`100% ${lineHeightPx}px`);
     }
 
     if (guides.lineBox) {
-      const lineHeightPx = selectedTypography.fontSize * selectedTypography.lineHeight;
+      const lineHeightPx = guideTypography.fontSize * guideTypography.lineHeight;
       backgrounds.push(`repeating-linear-gradient(to bottom, rgba(168, 85, 247, 0.1) 0px, rgba(168, 85, 247, 0.1) ${lineHeightPx}px, transparent ${lineHeightPx}px, transparent ${lineHeightPx * 2}px)`);
       sizes.push(`100% ${lineHeightPx * 2}px`);
     }
 
     if (guides.xHeight) {
-      const xHeight = selectedTypography.fontSize * 0.5;
-      const lineHeightPx = selectedTypography.fontSize * selectedTypography.lineHeight;
-      const topOffset = (lineHeightPx - selectedTypography.fontSize) / 2 + selectedTypography.fontSize * 0.25;
+      const xHeight = guideTypography.fontSize * 0.5;
+      const lineHeightPx = guideTypography.fontSize * guideTypography.lineHeight;
+      const topOffset = (lineHeightPx - guideTypography.fontSize) / 2 + guideTypography.fontSize * 0.25;
       backgrounds.push(`repeating-linear-gradient(to bottom, transparent 0px, transparent ${topOffset}px, rgba(34, 197, 94, 0.2) ${topOffset}px, rgba(34, 197, 94, 0.2) ${topOffset + xHeight}px, transparent ${topOffset + xHeight}px, transparent ${lineHeightPx}px)`);
       sizes.push(`100% ${lineHeightPx}px`);
     }
@@ -133,7 +136,7 @@ export function TypographyCanvas({
     }
 
     return styles;
-  }, [guides, selectedTypography.fontSize, selectedTypography.lineHeight]);
+  }, [guides, guideTypography.fontSize, guideTypography.lineHeight]);
 
   const hasGuides = guides.baselineGrid || guides.lineBox || guides.xHeight;
 
@@ -148,6 +151,10 @@ export function TypographyCanvas({
         return { alignItems: 'flex-start' };
     }
   }, [layout.alignment]);
+
+  const handleCanvasClick = () => {
+    onSelectLayer(null);
+  };
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
@@ -176,10 +183,14 @@ export function TypographyCanvas({
       )}
 
       {/* Canvas Container */}
-      <div className="flex-1 flex items-start justify-center p-6 rounded-xl overflow-auto min-h-0">
+      <div
+        className="flex-1 flex items-start justify-center p-6 rounded-xl overflow-auto min-h-0 cursor-default"
+        onClick={handleCanvasClick}
+      >
         <div
           className="rounded-lg shadow-lg transition-all duration-300 overflow-hidden border border-amber-200"
           style={{ width: `min(100%, ${viewportWidth}px)` }}
+          onClick={(e) => e.stopPropagation()}
         >
           {/* Viewport Indicator */}
           <div
@@ -205,6 +216,7 @@ export function TypographyCanvas({
               ...(hasGuides ? combinedGuideStyle : {}),
               ...alignmentStyle,
             }}
+            onClick={handleCanvasClick}
           >
             {/* Heading Layer */}
             <LayerText
