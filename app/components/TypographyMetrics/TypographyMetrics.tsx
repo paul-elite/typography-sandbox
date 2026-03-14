@@ -54,15 +54,15 @@ export function TypographyMetrics({
       <div className="grid grid-cols-2 gap-x-4 gap-y-2">
         {metrics.map((metric) => (
           <div key={metric.label} className="flex justify-between items-baseline">
-            <span className="text-xs text-zinc-500">{metric.label}</span>
-            <span className="text-sm text-zinc-700 font-mono">{metric.value}</span>
+            <span className="text-xs text-zinc-400">{metric.label}</span>
+            <span className="text-xs text-zinc-700 font-mono font-medium">{metric.value}</span>
           </div>
         ))}
       </div>
 
       <div className="pt-3 border-t border-zinc-200">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-zinc-500">Reading Comfort</span>
+          <span className="text-xs text-zinc-400">Reading Comfort</span>
           <span
             className="text-sm font-medium transition-colors duration-300"
             style={{ color: activeColor.hex }}
@@ -96,7 +96,7 @@ export function TypographyMetrics({
 
         <div className="flex justify-between mt-1.5">
           <span className="text-[10px] text-zinc-400">Poor</span>
-          <span className="text-[10px] text-zinc-500 font-mono">{readingComfort}%</span>
+          <span className="text-[10px] text-zinc-600 font-mono font-medium">{readingComfort}%</span>
           <span className="text-[10px] text-zinc-400">Excellent</span>
         </div>
       </div>
