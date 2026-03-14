@@ -147,7 +147,7 @@ export function Slider({
         {/* Recommended Spectrum Zone (warning color overlay middle) */}
         {recommendedZone && (
           <div
-            className="absolute rounded-full bg-[#FCED23] z-20 pointer-events-none transition-all duration-200"
+            className="absolute rounded-full bg-[#2599F8] z-20 pointer-events-none transition-all duration-200"
             style={{
               height: '2px',
               top: '50%',
