@@ -1,29 +1,32 @@
 'use client';
 
-import { PreviewMode, ViewportPreset, VIEWPORT_PRESETS, TypographyGuides } from '../../types/typography';
+import {
+  ViewportPreset,
+  VIEWPORT_PRESETS,
+  TypographyGuides,
+  LayoutSettings,
+  TextLayer,
+  LayerContent,
+  DEFAULT_LAYER_CONTENT,
+} from '../../types/typography';
+import { Slider } from '../ui/Slider';
+
+import {
+  CellphoneLine, PadLine, ComputerLine,
+  CellphoneFill, PadFill, ComputerFill,
+  AlignTopLine, AlignVerticalCenterLine, AlignArrowDownLine
+} from '@mingcute/react';
 
 interface PreviewModesProps {
-  previewMode: PreviewMode;
-  onPreviewModeChange: (mode: PreviewMode) => void;
-  customText: string;
-  onCustomTextChange: (text: string) => void;
+  layout: LayoutSettings;
+  onLayoutChange: <K extends keyof LayoutSettings>(key: K, value: LayoutSettings[K]) => void;
+  layerContent: LayerContent;
+  onLayerContentChange: (layer: TextLayer, content: string) => void;
   viewport: ViewportPreset;
   onViewportChange: (viewport: ViewportPreset) => void;
   guides: TypographyGuides;
   onToggleGuide: (guide: keyof TypographyGuides) => void;
 }
-
-import {
-  CellphoneLine, PadLine, ComputerLine,
-  CellphoneFill, PadFill, ComputerFill
-} from '@mingcute/react';
-
-const previewModes: Array<{ value: PreviewMode; label: string }> = [
-  { value: 'word', label: 'Word' },
-  { value: 'sentence', label: 'Sentence' },
-  { value: 'paragraph', label: 'Paragraph' },
-  { value: 'custom', label: 'Custom' },
-];
 
 const viewportOptions: Array<{ value: ViewportPreset; label: string }> = [
   { value: 'mobile', label: 'Mobile' },
@@ -37,11 +40,17 @@ const guideOptions: Array<{ value: keyof TypographyGuides; label: string }> = [
   { value: 'xHeight', label: 'X-Height' },
 ];
 
+const alignmentOptions: Array<{ value: LayoutSettings['alignment']; label: string }> = [
+  { value: 'start', label: 'Start' },
+  { value: 'center', label: 'Center' },
+  { value: 'stretch', label: 'Stretch' },
+];
+
 export function PreviewModes({
-  previewMode,
-  onPreviewModeChange,
-  customText,
-  onCustomTextChange,
+  layout,
+  onLayoutChange,
+  layerContent,
+  onLayerContentChange,
   viewport,
   onViewportChange,
   guides,
@@ -53,45 +62,127 @@ export function PreviewModes({
         Preview Options
       </h2>
 
-      {/* Preview Mode */}
-      <div className="space-y-2">
+      {/* Layout Section */}
+      <div className="space-y-4">
         <label className="block text-sm font-medium text-zinc-700">
-          Preview Mode
+          Layout
         </label>
-        <div className="flex flex-wrap gap-1.5">
-          {previewModes.map((mode) => (
-            <button
-              key={mode.value}
-              onClick={() => onPreviewModeChange(mode.value)}
-              className={`px-3 py-1.5 text-xs rounded-md transition-colors ${previewMode === mode.value
-                ? 'bg-zinc-900 text-white font-medium'
-                : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
+
+        {/* Heading → Paragraph Gap */}
+        <Slider
+          label="Heading → Paragraph Gap"
+          value={layout.headingParagraphGap}
+          min={0}
+          max={64}
+          step={4}
+          unit="px"
+          onChange={(value) => onLayoutChange('headingParagraphGap', value)}
+          defaultValue={16}
+        />
+
+        {/* Paragraph → Caption Gap */}
+        <Slider
+          label="Paragraph → Caption Gap"
+          value={layout.paragraphCaptionGap}
+          min={0}
+          max={64}
+          step={4}
+          unit="px"
+          onChange={(value) => onLayoutChange('paragraphCaptionGap', value)}
+          defaultValue={24}
+        />
+
+        {/* Container Padding */}
+        <Slider
+          label="Container Padding"
+          value={layout.padding}
+          min={0}
+          max={64}
+          step={4}
+          unit="px"
+          onChange={(value) => onLayoutChange('padding', value)}
+          defaultValue={32}
+        />
+
+        {/* Alignment Buttons */}
+        <div>
+          <label className="block text-xs text-zinc-500 mb-2">
+            Alignment
+          </label>
+          <div className="flex gap-1">
+            {alignmentOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => onLayoutChange('alignment', option.value)}
+                title={option.label}
+                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-md transition-colors ${
+                  layout.alignment === option.value
+                    ? 'bg-zinc-900 text-white font-medium'
+                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
                 }`}
-            >
-              {mode.label}
-            </button>
-          ))}
+              >
+                <span className="flex items-center justify-center w-4 h-4 [&>svg]:w-full [&>svg]:h-full">
+                  {option.value === 'start' && <AlignTopLine />}
+                  {option.value === 'center' && <AlignVerticalCenterLine />}
+                  {option.value === 'stretch' && <AlignArrowDownLine />}
+                </span>
+                <span className="hidden sm:inline">{option.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Custom Text Input */}
-      {previewMode === 'custom' && (
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-zinc-700">
-            Custom Text
+      {/* Content Section */}
+      <div className="space-y-3 pt-3 border-t border-zinc-200">
+        <label className="block text-sm font-medium text-zinc-700">
+          Content
+        </label>
+
+        {/* Heading Content */}
+        <div className="space-y-1">
+          <label className="block text-xs text-zinc-500">
+            Heading
           </label>
-          <textarea
-            value={customText}
-            onChange={(e) => onCustomTextChange(e.target.value)}
-            placeholder="Enter your custom text here..."
-            className="w-full h-24 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-900 placeholder-zinc-400 resize-none outline-none focus:outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6]"
-            style={{ outline: 'none' }}
+          <input
+            type="text"
+            value={layerContent.heading}
+            onChange={(e) => onLayerContentChange('heading', e.target.value)}
+            placeholder={DEFAULT_LAYER_CONTENT.heading}
+            className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6]"
           />
         </div>
-      )}
+
+        {/* Paragraph Content */}
+        <div className="space-y-1">
+          <label className="block text-xs text-zinc-500">
+            Paragraph
+          </label>
+          <textarea
+            value={layerContent.paragraph}
+            onChange={(e) => onLayerContentChange('paragraph', e.target.value)}
+            placeholder={DEFAULT_LAYER_CONTENT.paragraph}
+            className="w-full h-20 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-900 placeholder-zinc-400 resize-none outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6]"
+          />
+        </div>
+
+        {/* Caption Content */}
+        <div className="space-y-1">
+          <label className="block text-xs text-zinc-500">
+            Caption
+          </label>
+          <input
+            type="text"
+            value={layerContent.caption}
+            onChange={(e) => onLayerContentChange('caption', e.target.value)}
+            placeholder={DEFAULT_LAYER_CONTENT.caption}
+            className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6]"
+          />
+        </div>
+      </div>
 
       {/* Viewport Presets */}
-      <div className="space-y-2">
+      <div className="space-y-2 pt-3 border-t border-zinc-200">
         <label className="block text-sm font-medium text-zinc-700">
           Viewport Width
         </label>
@@ -121,7 +212,7 @@ export function PreviewModes({
       </div>
 
       {/* Typography Guides */}
-      <div className="space-y-2">
+      <div className="space-y-2 pt-3 border-t border-zinc-200">
         <label className="block text-sm font-medium text-zinc-700">
           Typography Guides
         </label>

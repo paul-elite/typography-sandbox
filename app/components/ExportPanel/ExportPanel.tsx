@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { TypographyState, ExportFormat } from '../../types/typography';
+import { LayerTypography, ExportFormat } from '../../types/typography';
 import { exportTypography, copyToClipboard, downloadFile } from '../../utils/export';
 
 interface ExportPanelProps {
-  typography: TypographyState;
+  layerTypography: LayerTypography;
 }
 
 const exportFormats: Array<{ value: ExportFormat; label: string; icon: string; extension: string; mimeType: string }> = [
@@ -14,12 +14,12 @@ const exportFormats: Array<{ value: ExportFormat; label: string; icon: string; e
   { value: 'json', label: 'JSON Tokens', icon: '📦', extension: 'json', mimeType: 'application/json' },
 ];
 
-export function ExportPanel({ typography }: ExportPanelProps) {
+export function ExportPanel({ layerTypography }: ExportPanelProps) {
   const [activeFormat, setActiveFormat] = useState<ExportFormat>('css');
   const [copied, setCopied] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const exportedCode = exportTypography(typography, activeFormat);
+  const exportedCode = exportTypography(layerTypography, activeFormat);
 
   const handleCopy = useCallback(async () => {
     try {
@@ -121,13 +121,13 @@ export function ExportPanel({ typography }: ExportPanelProps) {
           {/* Hints */}
           <div className="text-xs text-zinc-500">
             {activeFormat === 'css' && (
-              <p>Copy the CSS class or use the custom properties (CSS variables) for flexibility.</p>
+              <p>Copy the CSS classes or use the custom properties (CSS variables) for flexibility. Includes all three layers.</p>
             )}
             {activeFormat === 'tailwind' && (
-              <p>Add this configuration to your tailwind.config.js file to use custom typography classes.</p>
+              <p>Add this configuration to your tailwind.config.js file to use custom typography classes for all layers.</p>
             )}
             {activeFormat === 'json' && (
-              <p>Design tokens compatible with Style Dictionary and similar tools.</p>
+              <p>Design tokens compatible with Style Dictionary and similar tools. Contains all layer typography settings.</p>
             )}
           </div>
         </div>

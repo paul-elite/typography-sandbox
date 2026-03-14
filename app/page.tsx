@@ -17,18 +17,24 @@ export default function Home() {
   const [isExportOpen, setIsExportOpen] = useState(false);
 
   const {
+    // Multi-layer state
+    layerTypography,
+    selectedLayer,
+    setSelectedLayer,
+    layout,
+    updateLayout,
+    layerContent,
+    updateLayerContent,
+    // Current layer's typography
     typography,
     updateTypography,
     resetTypography,
-    previewMode,
-    setPreviewMode,
-    customText,
-    setCustomText,
-    previewText,
+    // Viewport and guides
     viewport,
     setViewport,
     guides,
     toggleGuide,
+    // Metrics
     readingComfort,
     comfortLevel,
   } = useTypography();
@@ -87,6 +93,8 @@ export default function Home() {
           <aside className="w-full lg:w-80 xl:w-96 space-y-4 flex-shrink-0">
             <TypographyControls
               typography={typography}
+              selectedLayer={selectedLayer}
+              onSelectLayer={setSelectedLayer}
               recommendations={recommendations}
               onUpdate={updateTypography}
               onResetAll={resetTypography}
@@ -102,21 +110,24 @@ export default function Home() {
           {/* Center - Canvas */}
           <section className="flex-1 min-h-[500px] flex flex-col">
             <TypographyCanvas
-              typography={typography}
-              previewText={previewText}
+              layerTypography={layerTypography}
+              selectedLayer={selectedLayer}
+              onSelectLayer={setSelectedLayer}
+              layout={layout}
+              layerContent={layerContent}
               viewport={viewport}
               guides={guides}
-              isFontLoaded={isFontLoaded(typography.fontFamily)}
+              isFontLoaded={isFontLoaded}
             />
           </section>
 
           {/* Right Sidebar - Options & Metrics */}
           <aside className="w-full lg:w-72 xl:w-80 space-y-4 flex-shrink-0">
             <PreviewModes
-              previewMode={previewMode}
-              onPreviewModeChange={setPreviewMode}
-              customText={customText}
-              onCustomTextChange={setCustomText}
+              layout={layout}
+              onLayoutChange={updateLayout}
+              layerContent={layerContent}
+              onLayerContentChange={updateLayerContent}
               viewport={viewport}
               onViewportChange={setViewport}
               guides={guides}
@@ -125,6 +136,7 @@ export default function Home() {
 
             <TypographyMetrics
               typography={typography}
+              selectedLayer={selectedLayer}
               readingComfort={readingComfort}
               comfortLevel={comfortLevel}
             />
@@ -143,7 +155,7 @@ export default function Home() {
 
       {/* Export Modal */}
       <ExportModal
-        typography={typography}
+        layerTypography={layerTypography}
         isOpen={isExportOpen}
         onClose={() => setIsExportOpen(false)}
       />

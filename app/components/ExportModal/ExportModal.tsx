@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { TypographyState, ExportFormat } from '../../types/typography';
+import { LayerTypography, ExportFormat } from '../../types/typography';
 import { exportTypography, copyToClipboard, downloadFile } from '../../utils/export';
 
 interface ExportModalProps {
-  typography: TypographyState;
+  layerTypography: LayerTypography;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -16,11 +16,11 @@ const exportFormats: Array<{ value: ExportFormat; label: string; icon: string; e
   { value: 'json', label: 'JSON Tokens', icon: '📦', extension: 'json', mimeType: 'application/json' },
 ];
 
-export function ExportModal({ typography, isOpen, onClose }: ExportModalProps) {
+export function ExportModal({ layerTypography, isOpen, onClose }: ExportModalProps) {
   const [activeFormat, setActiveFormat] = useState<ExportFormat>('css');
   const [copied, setCopied] = useState(false);
 
-  const exportedCode = exportTypography(typography, activeFormat);
+  const exportedCode = exportTypography(layerTypography, activeFormat);
 
   const handleCopy = useCallback(async () => {
     try {
@@ -69,10 +69,13 @@ export function ExportModal({ typography, isOpen, onClose }: ExportModalProps) {
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-200">
-          <h2 className="text-lg font-semibold text-zinc-900">Export Typography</h2>
+          <div>
+            <h2 className="text-lg font-semibold text-zinc-900">Export Typography</h2>
+            <p className="text-xs text-zinc-500 mt-0.5">All three layers (Heading, Paragraph, Caption)</p>
+          </div>
           <button
             onClick={onClose}
             className="p-2 text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors"
@@ -116,7 +119,7 @@ export function ExportModal({ typography, isOpen, onClose }: ExportModalProps) {
 
           {/* Code Preview */}
           <div className="relative">
-            <pre className="p-4 bg-zinc-900 rounded-xl text-sm text-zinc-300 overflow-auto max-h-72 font-mono">
+            <pre className="p-4 bg-zinc-900 rounded-xl text-sm text-zinc-300 overflow-auto max-h-80 font-mono">
               <code>{exportedCode}</code>
             </pre>
 
@@ -155,9 +158,9 @@ export function ExportModal({ typography, isOpen, onClose }: ExportModalProps) {
 
           {/* Hints */}
           <p className="text-xs text-zinc-500">
-            {activeFormat === 'css' && 'Copy the CSS class or use the custom properties (CSS variables) for flexibility.'}
-            {activeFormat === 'tailwind' && 'Add this configuration to your tailwind.config.js file to use custom typography classes.'}
-            {activeFormat === 'json' && 'Design tokens compatible with Style Dictionary and similar tools.'}
+            {activeFormat === 'css' && 'Copy the CSS classes or use the custom properties (CSS variables) for flexibility. Includes heading, paragraph, and caption styles.'}
+            {activeFormat === 'tailwind' && 'Add this configuration to your tailwind.config.js file to use custom typography classes for all three layers.'}
+            {activeFormat === 'json' && 'Design tokens compatible with Style Dictionary and similar tools. Contains all layer typography settings.'}
           </p>
         </div>
 

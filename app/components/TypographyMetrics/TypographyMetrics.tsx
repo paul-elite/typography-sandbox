@@ -1,10 +1,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import { TypographyState } from '../../types/typography';
+import { TypographyState, TextLayer } from '../../types/typography';
 
 interface TypographyMetricsProps {
   typography: TypographyState;
+  selectedLayer: TextLayer;
   readingComfort: number;
   comfortLevel: { label: string; color: string };
 }
@@ -18,8 +19,15 @@ const COMFORT_COLORS = [
   { hex: '#00B82E', label: 'Excellent' },
 ];
 
+const LAYER_LABELS: Record<TextLayer, string> = {
+  heading: 'Heading',
+  paragraph: 'Paragraph',
+  caption: 'Caption',
+};
+
 export function TypographyMetrics({
   typography,
+  selectedLayer,
   readingComfort,
 }: TypographyMetricsProps) {
   const metrics = [
@@ -47,9 +55,14 @@ export function TypographyMetrics({
 
   return (
     <div className="bg-white rounded-xl p-5 space-y-4 shadow-[0px_0px_0px_0.5px_rgba(0,0,0,0.1)]">
-      <h2 className="text-sm font-semibold text-zinc-800">
-        Typography Metrics
-      </h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-semibold text-zinc-800">
+          Typography Metrics
+        </h2>
+        <span className="text-xs font-medium text-zinc-500 bg-zinc-100 px-2 py-1 rounded">
+          {LAYER_LABELS[selectedLayer]}
+        </span>
+      </div>
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-2">
         {metrics.map((metric) => (

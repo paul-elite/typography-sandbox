@@ -15,6 +15,38 @@ export interface FontOption {
   category: string;
 }
 
+// Text layer types
+export type TextLayer = 'heading' | 'paragraph' | 'caption';
+
+// Each layer has its own typography settings
+export interface LayerTypography {
+  heading: TypographyState;
+  paragraph: TypographyState;
+  caption: TypographyState;
+}
+
+// Layout settings for the container
+export interface LayoutSettings {
+  headingParagraphGap: number;  // Gap between heading and paragraph (px)
+  paragraphCaptionGap: number;  // Gap between paragraph and caption (px)
+  padding: number;              // Container padding (px)
+  alignment: 'start' | 'center' | 'stretch';  // Cross-axis alignment
+}
+
+// Default text content for each layer
+export const DEFAULT_LAYER_CONTENT = {
+  heading: 'The Art of Typography',
+  paragraph: 'Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. Good typography establishes a strong visual hierarchy and ensures an excellent user experience.',
+  caption: 'Photo credit: Design Tales, 2026',
+};
+
+// Layer content type
+export interface LayerContent {
+  heading: string;
+  paragraph: string;
+  caption: string;
+}
+
 export type PreviewMode = 'word' | 'sentence' | 'paragraph' | 'custom';
 
 export type ViewportPreset = 'mobile' | 'tablet' | 'desktop';
@@ -47,6 +79,47 @@ export const DEFAULT_TYPOGRAPHY: TypographyState = {
   lineHeight: 1.5,
   paragraphWidth: 65,
   textAlign: 'left',
+};
+
+// Default typography per layer
+export const DEFAULT_HEADING_TYPOGRAPHY: TypographyState = {
+  fontFamily: 'Inter',
+  fontSize: 32,
+  fontWeight: 700,
+  letterSpacing: -0.02,
+  wordSpacing: 0,
+  lineHeight: 1.2,
+  paragraphWidth: 65,
+  textAlign: 'left',
+};
+
+export const DEFAULT_PARAGRAPH_TYPOGRAPHY: TypographyState = {
+  fontFamily: 'Inter',
+  fontSize: 18,
+  fontWeight: 400,
+  letterSpacing: 0,
+  wordSpacing: 0,
+  lineHeight: 1.6,
+  paragraphWidth: 65,
+  textAlign: 'left',
+};
+
+export const DEFAULT_CAPTION_TYPOGRAPHY: TypographyState = {
+  fontFamily: 'Inter',
+  fontSize: 14,
+  fontWeight: 400,
+  letterSpacing: 0.01,
+  wordSpacing: 0,
+  lineHeight: 1.4,
+  paragraphWidth: 65,
+  textAlign: 'left',
+};
+
+export const DEFAULT_LAYOUT: LayoutSettings = {
+  headingParagraphGap: 16,
+  paragraphCaptionGap: 24,
+  padding: 32,
+  alignment: 'start',
 };
 
 export const FONT_WEIGHTS = [100, 200, 300, 400, 500, 600, 700, 800, 900];

@@ -1,25 +1,49 @@
 'use client';
 
 import { useMemo } from 'react';
-import { TypographyState, ViewportPreset, VIEWPORT_PRESETS, TypographyGuides } from '../../types/typography';
+import {
+  TypographyState,
+  ViewportPreset,
+  VIEWPORT_PRESETS,
+  TypographyGuides,
+  TextLayer,
+  LayerTypography,
+  LayoutSettings,
+  LayerContent,
+} from '../../types/typography';
 
 interface TypographyCanvasProps {
-  typography: TypographyState;
-  previewText: string;
+  layerTypography: LayerTypography;
+  selectedLayer: TextLayer;
+  onSelectLayer: (layer: TextLayer) => void;
+  layout: LayoutSettings;
+  layerContent: LayerContent;
   viewport: ViewportPreset;
   guides: TypographyGuides;
-  isFontLoaded: boolean;
+  isFontLoaded: (font: string) => boolean;
 }
 
-export function TypographyCanvas({
-  typography,
-  previewText,
-  viewport,
-  guides,
-  isFontLoaded,
-}: TypographyCanvasProps) {
-  const viewportWidth = VIEWPORT_PRESETS[viewport].width;
+const LAYER_LABELS: Record<TextLayer, string> = {
+  heading: 'Heading',
+  paragraph: 'Paragraph',
+  caption: 'Caption',
+};
 
+function LayerText({
+  layer,
+  typography,
+  content,
+  isSelected,
+  onSelect,
+  isFontLoaded,
+}: {
+  layer: TextLayer;
+  typography: TypographyState;
+  content: string;
+  isSelected: boolean;
+  onSelect: () => void;
+  isFontLoaded: boolean;
+}) {
   const textStyle = useMemo(() => ({
     fontFamily: isFontLoaded ? `'${typography.fontFamily}', sans-serif` : 'system-ui, sans-serif',
     fontSize: `${typography.fontSize}px`,
@@ -31,27 +55,73 @@ export function TypographyCanvas({
     textAlign: typography.textAlign as React.CSSProperties['textAlign'],
   }), [typography, isFontLoaded]);
 
+  return (
+    <div
+      className={`relative group cursor-pointer transition-all duration-150 rounded-md ${
+        isSelected
+          ? 'ring-2 ring-blue-500 bg-blue-50/50'
+          : 'hover:ring-1 hover:ring-zinc-300 hover:bg-zinc-50/50'
+      }`}
+      onClick={onSelect}
+      style={{ padding: '8px' }}
+    >
+      {/* Layer label */}
+      <div
+        className={`absolute -top-2.5 left-2 px-2 py-0.5 text-[10px] font-medium rounded transition-opacity ${
+          isSelected
+            ? 'bg-blue-500 text-white opacity-100'
+            : 'bg-zinc-200 text-zinc-600 opacity-0 group-hover:opacity-100'
+        }`}
+      >
+        {LAYER_LABELS[layer]}
+      </div>
+
+      <div
+        className="text-zinc-900 whitespace-pre-wrap break-words transition-all duration-150"
+        style={textStyle}
+      >
+        {content}
+      </div>
+    </div>
+  );
+}
+
+export function TypographyCanvas({
+  layerTypography,
+  selectedLayer,
+  onSelectLayer,
+  layout,
+  layerContent,
+  viewport,
+  guides,
+  isFontLoaded,
+}: TypographyCanvasProps) {
+  const viewportWidth = VIEWPORT_PRESETS[viewport].width;
+
+  // Use the selected layer's typography for guide calculations
+  const selectedTypography = layerTypography[selectedLayer];
+
   const combinedGuideStyle = useMemo(() => {
     const styles: React.CSSProperties = {};
     const backgrounds: string[] = [];
     const sizes: string[] = [];
 
     if (guides.baselineGrid) {
-      const lineHeightPx = typography.fontSize * typography.lineHeight;
+      const lineHeightPx = selectedTypography.fontSize * selectedTypography.lineHeight;
       backgrounds.push(`linear-gradient(to bottom, transparent ${lineHeightPx - 1}px, rgba(59, 130, 246, 0.4) ${lineHeightPx - 1}px, rgba(59, 130, 246, 0.4) ${lineHeightPx}px)`);
       sizes.push(`100% ${lineHeightPx}px`);
     }
 
     if (guides.lineBox) {
-      const lineHeightPx = typography.fontSize * typography.lineHeight;
+      const lineHeightPx = selectedTypography.fontSize * selectedTypography.lineHeight;
       backgrounds.push(`repeating-linear-gradient(to bottom, rgba(168, 85, 247, 0.1) 0px, rgba(168, 85, 247, 0.1) ${lineHeightPx}px, transparent ${lineHeightPx}px, transparent ${lineHeightPx * 2}px)`);
       sizes.push(`100% ${lineHeightPx * 2}px`);
     }
 
     if (guides.xHeight) {
-      const xHeight = typography.fontSize * 0.5;
-      const lineHeightPx = typography.fontSize * typography.lineHeight;
-      const topOffset = (lineHeightPx - typography.fontSize) / 2 + typography.fontSize * 0.25;
+      const xHeight = selectedTypography.fontSize * 0.5;
+      const lineHeightPx = selectedTypography.fontSize * selectedTypography.lineHeight;
+      const topOffset = (lineHeightPx - selectedTypography.fontSize) / 2 + selectedTypography.fontSize * 0.25;
       backgrounds.push(`repeating-linear-gradient(to bottom, transparent 0px, transparent ${topOffset}px, rgba(34, 197, 94, 0.2) ${topOffset}px, rgba(34, 197, 94, 0.2) ${topOffset + xHeight}px, transparent ${topOffset + xHeight}px, transparent ${lineHeightPx}px)`);
       sizes.push(`100% ${lineHeightPx}px`);
     }
@@ -62,9 +132,21 @@ export function TypographyCanvas({
     }
 
     return styles;
-  }, [guides, typography.fontSize, typography.lineHeight]);
+  }, [guides, selectedTypography.fontSize, selectedTypography.lineHeight]);
 
   const hasGuides = guides.baselineGrid || guides.lineBox || guides.xHeight;
+
+  // Alignment styles for cross-axis
+  const alignmentStyle = useMemo(() => {
+    switch (layout.alignment) {
+      case 'center':
+        return { alignItems: 'center' };
+      case 'stretch':
+        return { alignItems: 'stretch' };
+      default:
+        return { alignItems: 'flex-start' };
+    }
+  }, [layout.alignment]);
 
   return (
     <div className="flex-1 flex flex-col">
@@ -113,51 +195,54 @@ export function TypographyCanvas({
             </span>
           </div>
 
-          {/* Text Content */}
+          {/* Text Content - Three Layers */}
           <div
-            className="p-8 min-h-[200px] relative"
+            className="min-h-[200px] relative flex flex-col"
             style={{
               backgroundColor: '#FFF1D4',
-              ...(hasGuides ? combinedGuideStyle : {})
+              padding: `${layout.padding}px`,
+              ...(hasGuides ? combinedGuideStyle : {}),
+              ...alignmentStyle,
             }}
           >
-            <div
-              className="text-zinc-900 whitespace-pre-wrap break-words mx-auto transition-all duration-150"
-              style={textStyle}
-            >
-              {previewText}
-            </div>
+            {/* Heading Layer */}
+            <LayerText
+              layer="heading"
+              typography={layerTypography.heading}
+              content={layerContent.heading}
+              isSelected={selectedLayer === 'heading'}
+              onSelect={() => onSelectLayer('heading')}
+              isFontLoaded={isFontLoaded(layerTypography.heading.fontFamily)}
+            />
+
+            {/* Gap between heading and paragraph */}
+            <div style={{ height: `${layout.headingParagraphGap}px` }} />
+
+            {/* Paragraph Layer */}
+            <LayerText
+              layer="paragraph"
+              typography={layerTypography.paragraph}
+              content={layerContent.paragraph}
+              isSelected={selectedLayer === 'paragraph'}
+              onSelect={() => onSelectLayer('paragraph')}
+              isFontLoaded={isFontLoaded(layerTypography.paragraph.fontFamily)}
+            />
+
+            {/* Gap between paragraph and caption */}
+            <div style={{ height: `${layout.paragraphCaptionGap}px` }} />
+
+            {/* Caption Layer */}
+            <LayerText
+              layer="caption"
+              typography={layerTypography.caption}
+              content={layerContent.caption}
+              isSelected={selectedLayer === 'caption'}
+              onSelect={() => onSelectLayer('caption')}
+              isFontLoaded={isFontLoaded(layerTypography.caption.fontFamily)}
+            />
           </div>
         </div>
       </div>
-
-      {/* Font Loading Indicator */}
-      {!isFontLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-xl">
-          <div className="flex items-center gap-2 px-4 py-2 bg-zinc-100 rounded-full border border-zinc-200">
-            <svg
-              className="w-4 h-4 animate-spin text-zinc-500"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              />
-            </svg>
-            <span className="text-sm text-zinc-700">Loading font...</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

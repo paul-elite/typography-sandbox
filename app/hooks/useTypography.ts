@@ -3,17 +3,30 @@
 import { useState, useCallback, useMemo } from 'react';
 import {
   TypographyState,
-  DEFAULT_TYPOGRAPHY,
-  PreviewMode,
+  TextLayer,
+  LayerTypography,
+  LayoutSettings,
+  LayerContent,
+  DEFAULT_HEADING_TYPOGRAPHY,
+  DEFAULT_PARAGRAPH_TYPOGRAPHY,
+  DEFAULT_CAPTION_TYPOGRAPHY,
+  DEFAULT_LAYOUT,
+  DEFAULT_LAYER_CONTENT,
   ViewportPreset,
   TypographyGuides,
-  PREVIEW_TEXTS,
 } from '../types/typography';
 
+const DEFAULT_LAYER_TYPOGRAPHY: LayerTypography = {
+  heading: DEFAULT_HEADING_TYPOGRAPHY,
+  paragraph: DEFAULT_PARAGRAPH_TYPOGRAPHY,
+  caption: DEFAULT_CAPTION_TYPOGRAPHY,
+};
+
 export function useTypography() {
-  const [typography, setTypography] = useState<TypographyState>(DEFAULT_TYPOGRAPHY);
-  const [previewMode, setPreviewMode] = useState<PreviewMode>('paragraph');
-  const [customText, setCustomText] = useState('');
+  const [layerTypography, setLayerTypography] = useState<LayerTypography>(DEFAULT_LAYER_TYPOGRAPHY);
+  const [selectedLayer, setSelectedLayer] = useState<TextLayer>('paragraph');
+  const [layout, setLayout] = useState<LayoutSettings>(DEFAULT_LAYOUT);
+  const [layerContent, setLayerContent] = useState<LayerContent>({ ...DEFAULT_LAYER_CONTENT });
   const [viewport, setViewport] = useState<ViewportPreset>('desktop');
   const [guides, setGuides] = useState<TypographyGuides>({
     baselineGrid: false,
@@ -21,31 +34,58 @@ export function useTypography() {
     xHeight: false,
   });
 
+  // Get the current layer's typography for convenience
+  const typography = layerTypography[selectedLayer];
+
   const updateTypography = useCallback(<K extends keyof TypographyState>(
     key: K,
     value: TypographyState[K]
   ) => {
-    setTypography(prev => ({ ...prev, [key]: value }));
-  }, []);
+    setLayerTypography(prev => ({
+      ...prev,
+      [selectedLayer]: { ...prev[selectedLayer], [key]: value }
+    }));
+  }, [selectedLayer]);
 
   const resetTypography = useCallback(() => {
-    setTypography(DEFAULT_TYPOGRAPHY);
-  }, []);
+    // Reset only the selected layer
+    const defaults: Record<TextLayer, TypographyState> = {
+      heading: DEFAULT_HEADING_TYPOGRAPHY,
+      paragraph: DEFAULT_PARAGRAPH_TYPOGRAPHY,
+      caption: DEFAULT_CAPTION_TYPOGRAPHY,
+    };
+    setLayerTypography(prev => ({
+      ...prev,
+      [selectedLayer]: defaults[selectedLayer]
+    }));
+  }, [selectedLayer]);
 
   const resetSingleValue = useCallback(<K extends keyof TypographyState>(key: K) => {
-    setTypography(prev => ({ ...prev, [key]: DEFAULT_TYPOGRAPHY[key] }));
+    const defaults: Record<TextLayer, TypographyState> = {
+      heading: DEFAULT_HEADING_TYPOGRAPHY,
+      paragraph: DEFAULT_PARAGRAPH_TYPOGRAPHY,
+      caption: DEFAULT_CAPTION_TYPOGRAPHY,
+    };
+    setLayerTypography(prev => ({
+      ...prev,
+      [selectedLayer]: { ...prev[selectedLayer], [key]: defaults[selectedLayer][key] }
+    }));
+  }, [selectedLayer]);
+
+  const updateLayout = useCallback(<K extends keyof LayoutSettings>(
+    key: K,
+    value: LayoutSettings[K]
+  ) => {
+    setLayout(prev => ({ ...prev, [key]: value }));
+  }, []);
+
+  const updateLayerContent = useCallback((layer: TextLayer, content: string) => {
+    setLayerContent(prev => ({ ...prev, [layer]: content }));
   }, []);
 
   const toggleGuide = useCallback((guide: keyof TypographyGuides) => {
     setGuides(prev => ({ ...prev, [guide]: !prev[guide] }));
   }, []);
-
-  const previewText = useMemo(() => {
-    if (previewMode === 'custom') {
-      return customText || 'Enter your custom text...';
-    }
-    return PREVIEW_TEXTS[previewMode];
-  }, [previewMode, customText]);
 
   const readingComfort = useMemo(() => {
     const { fontSize, lineHeight, paragraphWidth, letterSpacing, wordSpacing, fontWeight, textAlign } = typography;
@@ -110,19 +150,25 @@ export function useTypography() {
   }, [readingComfort]);
 
   return {
+    // Multi-layer state
+    layerTypography,
+    selectedLayer,
+    setSelectedLayer,
+    layout,
+    updateLayout,
+    layerContent,
+    updateLayerContent,
+    // Current layer's typography (for convenience)
     typography,
     updateTypography,
     resetTypography,
     resetSingleValue,
-    previewMode,
-    setPreviewMode,
-    customText,
-    setCustomText,
-    previewText,
+    // Viewport and guides
     viewport,
     setViewport,
     guides,
     toggleGuide,
+    // Metrics
     readingComfort,
     comfortLevel,
   };

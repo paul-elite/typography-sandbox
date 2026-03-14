@@ -1,22 +1,22 @@
-import { TypographyState, ExportFormat } from '../types/typography';
+import { TypographyState, ExportFormat, LayerTypography, TextLayer } from '../types/typography';
 
-export function exportTypography(typography: TypographyState, format: ExportFormat): string {
+export function exportTypography(layerTypography: LayerTypography, format: ExportFormat): string {
   switch (format) {
     case 'css':
-      return exportAsCSS(typography);
+      return exportAsCSS(layerTypography);
     case 'tailwind':
-      return exportAsTailwind(typography);
+      return exportAsTailwind(layerTypography);
     case 'json':
-      return exportAsJSON(typography);
+      return exportAsJSON(layerTypography);
     default:
       return '';
   }
 }
 
-function exportAsCSS(typography: TypographyState): string {
+function formatLayerCSS(typography: TypographyState, className: string): string {
   const { fontFamily, fontSize, fontWeight, letterSpacing, wordSpacing, lineHeight, paragraphWidth, textAlign } = typography;
 
-  return `.typography {
+  return `.${className} {
   font-family: '${fontFamily}', sans-serif;
   font-size: ${fontSize}px;
   font-weight: ${fontWeight};
@@ -25,100 +25,139 @@ function exportAsCSS(typography: TypographyState): string {
   line-height: ${lineHeight};
   max-width: ${paragraphWidth}ch;
   text-align: ${textAlign};
-}
-
-/* CSS Custom Properties */
-:root {
-  --font-family: '${fontFamily}', sans-serif;
-  --font-size: ${fontSize}px;
-  --font-weight: ${fontWeight};
-  --letter-spacing: ${letterSpacing}em;
-  --word-spacing: ${wordSpacing}em;
-  --line-height: ${lineHeight};
-  --paragraph-width: ${paragraphWidth}ch;
-  --text-align: ${textAlign};
 }`;
 }
 
-function exportAsTailwind(typography: TypographyState): string {
-  const { fontFamily, fontSize, fontWeight, letterSpacing, lineHeight, paragraphWidth } = typography;
+function exportAsCSS(layerTypography: LayerTypography): string {
+  const layers: TextLayer[] = ['heading', 'paragraph', 'caption'];
 
-  // Convert values to Tailwind-compatible format
-  const trackingValue = letterSpacing === 0 ? 'normal' : `${letterSpacing}em`;
-  const leadingValue = lineHeight;
+  const layerClasses = layers.map(layer =>
+    formatLayerCSS(layerTypography[layer], `typography-${layer}`)
+  ).join('\n\n');
+
+  // Generate CSS custom properties for each layer
+  const customProperties = layers.map(layer => {
+    const t = layerTypography[layer];
+    return `  /* ${layer.charAt(0).toUpperCase() + layer.slice(1)} */
+  --${layer}-font-family: '${t.fontFamily}', sans-serif;
+  --${layer}-font-size: ${t.fontSize}px;
+  --${layer}-font-weight: ${t.fontWeight};
+  --${layer}-letter-spacing: ${t.letterSpacing}em;
+  --${layer}-word-spacing: ${t.wordSpacing}em;
+  --${layer}-line-height: ${t.lineHeight};
+  --${layer}-paragraph-width: ${t.paragraphWidth}ch;
+  --${layer}-text-align: ${t.textAlign};`;
+  }).join('\n\n');
+
+  return `${layerClasses}
+
+/* CSS Custom Properties */
+:root {
+${customProperties}
+}`;
+}
+
+function exportAsTailwind(layerTypography: LayerTypography): string {
+  const layers: TextLayer[] = ['heading', 'paragraph', 'caption'];
+
+  const fontFamilies: Record<string, string[]> = {};
+  const fontSizes: Record<string, (string | Record<string, string>)[]> = {};
+  const letterSpacings: Record<string, string> = {};
+  const lineHeights: Record<string, string> = {};
+  const maxWidths: Record<string, string> = {};
+
+  layers.forEach(layer => {
+    const t = layerTypography[layer];
+    const trackingValue = t.letterSpacing === 0 ? 'normal' : `${t.letterSpacing}em`;
+
+    fontFamilies[layer] = [`'${t.fontFamily}'`, 'sans-serif'];
+    fontSizes[layer] = [`${t.fontSize}px`, {
+      lineHeight: `${t.lineHeight}`,
+      letterSpacing: trackingValue,
+      fontWeight: `${t.fontWeight}`,
+    }];
+    letterSpacings[layer] = trackingValue;
+    lineHeights[layer] = `${t.lineHeight}`;
+    maxWidths[`prose-${layer}`] = `${t.paragraphWidth}ch`;
+  });
 
   return `// tailwind.config.js
 module.exports = {
   theme: {
     extend: {
-      fontFamily: {
-        'custom': ['${fontFamily}', 'sans-serif'],
-      },
-      fontSize: {
-        'custom': ['${fontSize}px', {
-          lineHeight: '${leadingValue}',
-          letterSpacing: '${trackingValue}',
-          fontWeight: '${fontWeight}',
-        }],
-      },
-      letterSpacing: {
-        'custom': '${trackingValue}',
-      },
-      lineHeight: {
-        'custom': '${leadingValue}',
-      },
-      maxWidth: {
-        'prose-custom': '${paragraphWidth}ch',
-      },
+      fontFamily: ${JSON.stringify(fontFamilies, null, 8).replace(/\n/g, '\n      ')},
+      fontSize: ${JSON.stringify(fontSizes, null, 8).replace(/\n/g, '\n      ')},
+      letterSpacing: ${JSON.stringify(letterSpacings, null, 8).replace(/\n/g, '\n      ')},
+      lineHeight: ${JSON.stringify(lineHeights, null, 8).replace(/\n/g, '\n      ')},
+      maxWidth: ${JSON.stringify(maxWidths, null, 8).replace(/\n/g, '\n      ')},
     },
   },
 }
 
-/* Usage example:
-<p className="font-custom text-custom tracking-custom leading-custom max-w-prose-custom">
+/* Usage examples:
+
+Heading:
+<h1 className="font-heading text-heading tracking-heading leading-heading max-w-prose-heading">
+  Your heading here
+</h1>
+
+Paragraph:
+<p className="font-paragraph text-paragraph tracking-paragraph leading-paragraph max-w-prose-paragraph">
   Your text here
 </p>
+
+Caption:
+<span className="font-caption text-caption tracking-caption leading-caption max-w-prose-caption">
+  Your caption here
+</span>
 */`;
 }
 
-function exportAsJSON(typography: TypographyState): string {
-  const { fontFamily, fontSize, fontWeight, letterSpacing, wordSpacing, lineHeight, paragraphWidth, textAlign } = typography;
+function exportAsJSON(layerTypography: LayerTypography): string {
+  const layers: TextLayer[] = ['heading', 'paragraph', 'caption'];
 
-  const tokens = {
-    typography: {
+  const typography: Record<string, Record<string, { value: string | number; type: string }>> = {};
+
+  layers.forEach(layer => {
+    const t = layerTypography[layer];
+    typography[layer] = {
       fontFamily: {
-        value: fontFamily,
+        value: t.fontFamily,
         type: 'fontFamily',
       },
       fontSize: {
-        value: `${fontSize}px`,
+        value: `${t.fontSize}px`,
         type: 'fontSize',
       },
       fontWeight: {
-        value: fontWeight,
+        value: t.fontWeight,
         type: 'fontWeight',
       },
       letterSpacing: {
-        value: `${letterSpacing}em`,
+        value: `${t.letterSpacing}em`,
         type: 'letterSpacing',
       },
       wordSpacing: {
-        value: `${wordSpacing}em`,
+        value: `${t.wordSpacing}em`,
         type: 'dimension',
       },
       lineHeight: {
-        value: lineHeight,
+        value: t.lineHeight,
         type: 'lineHeight',
       },
       paragraphWidth: {
-        value: `${paragraphWidth}ch`,
+        value: `${t.paragraphWidth}ch`,
         type: 'dimension',
       },
       textAlign: {
-        value: textAlign,
+        value: t.textAlign,
         type: 'textAlign',
       },
-    },
+    };
+  });
+
+  const tokens = {
+    typography,
     meta: {
       version: '1.0',
       generatedAt: new Date().toISOString(),
