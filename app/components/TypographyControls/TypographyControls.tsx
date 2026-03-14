@@ -94,10 +94,7 @@ export function TypographyControls({
           onChange={(value) => onUpdate('fontSize', value)}
           defaultValue={DEFAULT_TYPOGRAPHY.fontSize}
           recommendedValue={recommendations.fontSize}
-          onApplyRecommended={() => {
-            const midpoint = (recommendations.fontSize[0] + recommendations.fontSize[1]) / 2;
-            onUpdate('fontSize', Math.round(midpoint));
-          }}
+          onApplyRecommended={() => onUpdate('fontSize', recommendations.fontSize)}
           onSlideStart={() => onActiveSliderChange('fontSize')}
           onSlideEnd={() => onActiveSliderChange(null)}
         />
@@ -113,10 +110,7 @@ export function TypographyControls({
           onChange={(value) => onUpdate('letterSpacing', value)}
           defaultValue={DEFAULT_TYPOGRAPHY.letterSpacing}
           recommendedValue={recommendations.letterSpacing}
-          onApplyRecommended={() => {
-            const midpoint = (recommendations.letterSpacing[0] + recommendations.letterSpacing[1]) / 2;
-            onUpdate('letterSpacing', Math.round(midpoint * 100) / 100);
-          }}
+          onApplyRecommended={() => onUpdate('letterSpacing', recommendations.letterSpacing)}
           onSlideStart={() => onActiveSliderChange('letterSpacing')}
           onSlideEnd={() => onActiveSliderChange(null)}
           formatValue={(v) => v.toFixed(2)}
@@ -133,10 +127,7 @@ export function TypographyControls({
           onChange={(value) => onUpdate('wordSpacing', value)}
           defaultValue={DEFAULT_TYPOGRAPHY.wordSpacing}
           recommendedValue={recommendations.wordSpacing}
-          onApplyRecommended={() => {
-            const midpoint = (recommendations.wordSpacing[0] + recommendations.wordSpacing[1]) / 2;
-            onUpdate('wordSpacing', Math.round(midpoint * 100) / 100);
-          }}
+          onApplyRecommended={() => onUpdate('wordSpacing', recommendations.wordSpacing)}
           onSlideStart={() => onActiveSliderChange('wordSpacing')}
           onSlideEnd={() => onActiveSliderChange(null)}
           formatValue={(v) => v.toFixed(2)}
@@ -152,10 +143,7 @@ export function TypographyControls({
           onChange={(value) => onUpdate('lineHeight', value)}
           defaultValue={DEFAULT_TYPOGRAPHY.lineHeight}
           recommendedValue={recommendations.lineHeight}
-          onApplyRecommended={() => {
-            const midpoint = (recommendations.lineHeight[0] + recommendations.lineHeight[1]) / 2;
-            onUpdate('lineHeight', Math.round(midpoint * 100) / 100);
-          }}
+          onApplyRecommended={() => onUpdate('lineHeight', recommendations.lineHeight)}
           onSlideStart={() => onActiveSliderChange('lineHeight')}
           onSlideEnd={() => onActiveSliderChange(null)}
           formatValue={(v) => v.toFixed(2)}
@@ -172,10 +160,7 @@ export function TypographyControls({
           onChange={(value) => onUpdate('paragraphWidth', value)}
           defaultValue={DEFAULT_TYPOGRAPHY.paragraphWidth}
           recommendedValue={recommendations.paragraphWidth}
-          onApplyRecommended={() => {
-            const midpoint = (recommendations.paragraphWidth[0] + recommendations.paragraphWidth[1]) / 2;
-            onUpdate('paragraphWidth', Math.round(midpoint));
-          }}
+          onApplyRecommended={() => onUpdate('paragraphWidth', recommendations.paragraphWidth)}
           onSlideStart={() => onActiveSliderChange('paragraphWidth')}
           onSlideEnd={() => onActiveSliderChange(null)}
         />

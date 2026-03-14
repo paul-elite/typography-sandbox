@@ -11,7 +11,7 @@ interface SliderProps {
   unit?: string;
   onChange: (value: number) => void;
   defaultValue?: number;
-  recommendedValue?: [number, number];
+  recommendedValue?: number;
   formatValue?: (value: number) => string;
   onApplyRecommended?: () => void;
   onSlideStart?: () => void;
@@ -36,7 +36,7 @@ export function Slider({
   const id = useId();
   const [isSliding, setIsSliding] = useState(false);
   const displayValue = formatValue ? formatValue(value) : value.toString();
-  const isAtRecommended = recommendedValue !== undefined && value >= recommendedValue[0] && value <= recommendedValue[1];
+  const isAtRecommended = recommendedValue !== undefined && Math.abs(value - recommendedValue) < step;
 
   const handleSliderChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(parseFloat(e.target.value));
@@ -71,21 +71,18 @@ export function Slider({
   // Calculate percentages for slider gradient and recommended marker
   const percentage = ((value - min) / (max - min)) * 100;
 
-  const recommendedZone = useMemo(() => {
+  const recommendedPercentage = useMemo(() => {
     if (recommendedValue === undefined) return null;
-    const clampedMin = Math.max(min, Math.min(max, recommendedValue[0]));
-    const clampedMax = Math.max(min, Math.min(max, recommendedValue[1]));
-
-    return {
-      start: ((clampedMin - min) / (max - min)) * 100,
-      end: ((clampedMax - min) / (max - min)) * 100
-    };
+    const clamped = Math.max(min, Math.min(max, recommendedValue));
+    return ((clamped - min) / (max - min)) * 100;
   }, [recommendedValue, min, max]);
 
-  // Colors for tracks and zones
-  const activeColor = '#71717a'; // Solid grey for actual amount
-  const trackBgColor = '#e4e4e7'; // Light grey for empty track
-  const recommendedColor = '#3b82f6'; // Blue for the recommended spectrum zone
+  // Colors for active range
+  const activeColor = isSliding ? '#3b82f6' : '#71717a';
+  const trackBgColor = '#e4e4e7';
+
+  // Hide ghost thumb when sliding (it follows the main thumb)
+  const showGhostThumb = recommendedPercentage !== null && !isAtRecommended && !isSliding;
 
   return (
     <div className="space-y-2">
@@ -137,8 +134,20 @@ export function Slider({
         </div>
       </div>
 
-      {/* Slider track with gradient logic */}
+      {/* Slider track with ghost recommended thumb */}
       <div className="relative h-4 flex items-center">
+        {/* Ghost thumb for recommended value */}
+        {showGhostThumb && (
+          <button
+            onClick={onApplyRecommended}
+            className="absolute top-1/2 -translate-y-1/2 z-[5] cursor-pointer group transition-all duration-200"
+            style={{ left: `calc(${recommendedPercentage}% - 7px)` }}
+            title={`Click to apply recommended value`}
+            aria-label={`Apply recommended value`}
+          >
+            <div className="w-[14px] h-[14px] rounded-full bg-zinc-300 border-2 border-zinc-400 transition-all group-hover:bg-zinc-400 group-hover:border-zinc-500 group-hover:scale-110" />
+          </button>
+        )}
 
         <input
           id={id}
@@ -155,19 +164,7 @@ export function Slider({
           className={`w-full h-1.5 rounded-full appearance-none cursor-pointer relative z-10 transition-all duration-150 ${isSliding ? 'slider-track-active' : 'slider-track'
             }`}
           style={{
-            background: recommendedZone
-              ? `linear-gradient(to right, 
-                  ${activeColor} 0%, 
-                  ${activeColor} ${Math.min(percentage, recommendedZone.start)}%, 
-                  ${percentage > recommendedZone.start ? activeColor : trackBgColor} ${Math.min(percentage, recommendedZone.start)}%, 
-                  ${percentage > recommendedZone.start ? activeColor : trackBgColor} ${recommendedZone.start}%, 
-                  ${percentage > recommendedZone.start ? activeColor : recommendedColor} ${recommendedZone.start}%, 
-                  ${percentage > recommendedZone.end ? activeColor : recommendedColor} ${Math.max(recommendedZone.start, Math.min(percentage, recommendedZone.end))}%, 
-                  ${recommendedColor} ${Math.max(recommendedZone.start, Math.min(percentage, recommendedZone.end))}%, 
-                  ${recommendedColor} ${recommendedZone.end}%, 
-                  ${trackBgColor} ${recommendedZone.end}%, 
-                  ${trackBgColor} 100%)`
-              : `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${percentage}%, ${trackBgColor} ${percentage}%, ${trackBgColor} 100%)`,
+            background: `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${percentage}%, ${trackBgColor} ${percentage}%, ${trackBgColor} 100%)`,
           }}
         />
       </div>
