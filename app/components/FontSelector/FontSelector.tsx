@@ -74,7 +74,7 @@ export function FontSelector({
       </label>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-3 py-2.5 bg-white border border-zinc-300 rounded-lg text-left hover:border-zinc-400 outline-none focus:outline-none focus:border-transparent focus:shadow-[0_0_0_0.5px_#3b82f6] transition-colors"
+        className="w-full flex items-center justify-between px-3 py-2.5 bg-white border border-zinc-300 rounded-lg text-left hover:border-zinc-400 outline-none focus:outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6] transition-colors"
         style={{ outline: 'none' }}
       >
         <span
@@ -125,7 +125,7 @@ export function FontSelector({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search fonts..."
-              className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:outline-none focus:border-transparent focus:shadow-[0_0_0_0.5px_#3b82f6]"
+              className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6]"
               style={{ outline: 'none' }}
             />
           </div>
