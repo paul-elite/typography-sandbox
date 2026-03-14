@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useId } from 'react';
+import { useCallback, useId, useMemo } from 'react';
 
 interface SliderProps {
   label: string;
@@ -12,7 +12,9 @@ interface SliderProps {
   onChange: (value: number) => void;
   onReset: () => void;
   defaultValue?: number;
+  recommendedValue?: number;
   formatValue?: (value: number) => string;
+  onApplyRecommended?: () => void;
 }
 
 export function Slider({
@@ -25,11 +27,14 @@ export function Slider({
   onChange,
   onReset,
   defaultValue,
+  recommendedValue,
   formatValue,
+  onApplyRecommended,
 }: SliderProps) {
   const id = useId();
   const displayValue = formatValue ? formatValue(value) : value.toString();
   const isDefault = defaultValue !== undefined && value === defaultValue;
+  const isAtRecommended = recommendedValue !== undefined && Math.abs(value - recommendedValue) < step;
 
   const handleSliderChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(parseFloat(e.target.value));
@@ -51,8 +56,19 @@ export function Slider({
     onChange(newValue);
   }, [onChange, min, max, defaultValue]);
 
-  // Calculate percentage for slider gradient
+  // Calculate percentages for slider gradient and recommended marker
   const percentage = ((value - min) / (max - min)) * 100;
+
+  const recommendedPercentage = useMemo(() => {
+    if (recommendedValue === undefined) return null;
+    const clamped = Math.max(min, Math.min(max, recommendedValue));
+    return ((clamped - min) / (max - min)) * 100;
+  }, [recommendedValue, min, max]);
+
+  const formattedRecommended = useMemo(() => {
+    if (recommendedValue === undefined) return null;
+    return formatValue ? formatValue(recommendedValue) : recommendedValue.toString();
+  }, [recommendedValue, formatValue]);
 
   return (
     <div className="space-y-2">
@@ -102,19 +118,72 @@ export function Slider({
           </button>
         </div>
       </div>
-      <input
-        id={id}
-        type="range"
-        value={value}
-        min={min}
-        max={max}
-        step={step}
-        onChange={handleSliderChange}
-        className="w-full h-1.5 rounded-full appearance-none cursor-pointer slider-track"
-        style={{
-          background: `linear-gradient(to right, #a1a1aa 0%, #a1a1aa ${percentage}%, #3f3f46 ${percentage}%, #3f3f46 100%)`,
-        }}
-      />
+
+      {/* Slider track with recommended marker */}
+      <div className="relative">
+        <input
+          id={id}
+          type="range"
+          value={value}
+          min={min}
+          max={max}
+          step={step}
+          onChange={handleSliderChange}
+          className="w-full h-1.5 rounded-full appearance-none cursor-pointer slider-track relative z-10"
+          style={{
+            background: `linear-gradient(to right, #a1a1aa 0%, #a1a1aa ${percentage}%, #3f3f46 ${percentage}%, #3f3f46 100%)`,
+          }}
+        />
+
+        {/* Recommended value marker */}
+        {recommendedPercentage !== null && (
+          <button
+            onClick={onApplyRecommended}
+            className="absolute top-1/2 -translate-y-1/2 z-20 group"
+            style={{ left: `calc(${recommendedPercentage}% - 4px)` }}
+            title={`Recommended: ${formattedRecommended}${unit}`}
+            aria-label={`Apply recommended value: ${formattedRecommended}${unit}`}
+          >
+            {/* Diamond marker */}
+            <div
+              className={`w-2 h-2 rotate-45 transition-all ${
+                isAtRecommended
+                  ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]'
+                  : 'bg-amber-400 group-hover:bg-amber-300 group-hover:scale-125'
+              }`}
+            />
+            {/* Tooltip on hover */}
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-zinc-800 border border-zinc-700 rounded text-xs text-zinc-200 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              <span className="text-amber-400">Rec:</span> {formattedRecommended}{unit}
+              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-zinc-700" />
+            </div>
+          </button>
+        )}
+      </div>
+
+      {/* Recommended value indicator below slider */}
+      {recommendedValue !== undefined && !isAtRecommended && (
+        <div className="flex items-center justify-between text-[10px]">
+          <span className="text-zinc-600">{min}{unit}</span>
+          <button
+            onClick={onApplyRecommended}
+            className="flex items-center gap-1 text-amber-400/80 hover:text-amber-300 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="10"
+              height="10"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+            </svg>
+            <span>Recommended: {formattedRecommended}{unit}</span>
+          </button>
+          <span className="text-zinc-600">{max}{unit}</span>
+        </div>
+      )}
+
       <style jsx>{`
         .slider-track::-webkit-slider-thumb {
           appearance: none;

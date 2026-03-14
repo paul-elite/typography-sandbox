@@ -2,6 +2,7 @@
 
 import { useTypography } from './hooks/useTypography';
 import { useFontLoader } from './hooks/useFontLoader';
+import { useRecommendations } from './hooks/useRecommendations';
 import {
   TypographyCanvas,
   TypographyControls,
@@ -37,6 +38,8 @@ export default function Home() {
     getFontWeights,
   } = useFontLoader();
 
+  const recommendations = useRecommendations(typography);
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       {/* Header */}
@@ -71,6 +74,7 @@ export default function Home() {
           <aside className="w-full lg:w-80 xl:w-96 space-y-4 flex-shrink-0">
             <TypographyControls
               typography={typography}
+              recommendations={recommendations}
               onUpdate={updateTypography}
               onResetValue={resetSingleValue}
               onResetAll={resetTypography}

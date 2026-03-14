@@ -4,9 +4,11 @@ import { TypographyState, DEFAULT_TYPOGRAPHY, TEXT_ALIGNMENTS } from '../../type
 import { Slider } from '../ui/Slider';
 import { FontSelector } from '../FontSelector/FontSelector';
 import { FontOption } from '../../types/typography';
+import { TypographyRecommendations } from '../../hooks/useRecommendations';
 
 interface TypographyControlsProps {
   typography: TypographyState;
+  recommendations: TypographyRecommendations;
   onUpdate: <K extends keyof TypographyState>(key: K, value: TypographyState[K]) => void;
   onResetValue: <K extends keyof TypographyState>(key: K) => void;
   onResetAll: () => void;
@@ -19,6 +21,7 @@ interface TypographyControlsProps {
 
 export function TypographyControls({
   typography,
+  recommendations,
   onUpdate,
   onResetValue,
   onResetAll,
@@ -42,6 +45,18 @@ export function TypographyControls({
         >
           Reset All
         </button>
+      </div>
+
+      {/* Legend for recommended values */}
+      <div className="flex items-center gap-4 px-2 py-1.5 bg-zinc-800/50 rounded-lg">
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rotate-45 bg-amber-400" />
+          <span className="text-[10px] text-zinc-400">Recommended value</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rotate-45 bg-emerald-400" />
+          <span className="text-[10px] text-zinc-400">At recommended</span>
+        </div>
       </div>
 
       <div className="space-y-5">
@@ -88,6 +103,8 @@ export function TypographyControls({
           onChange={(value) => onUpdate('fontSize', value)}
           onReset={() => onResetValue('fontSize')}
           defaultValue={DEFAULT_TYPOGRAPHY.fontSize}
+          recommendedValue={recommendations.fontSize}
+          onApplyRecommended={() => onUpdate('fontSize', recommendations.fontSize)}
         />
 
         {/* Letter Spacing (Tracking) */}
@@ -101,6 +118,8 @@ export function TypographyControls({
           onChange={(value) => onUpdate('letterSpacing', value)}
           onReset={() => onResetValue('letterSpacing')}
           defaultValue={DEFAULT_TYPOGRAPHY.letterSpacing}
+          recommendedValue={recommendations.letterSpacing}
+          onApplyRecommended={() => onUpdate('letterSpacing', recommendations.letterSpacing)}
           formatValue={(v) => v.toFixed(2)}
         />
 
@@ -115,6 +134,8 @@ export function TypographyControls({
           onChange={(value) => onUpdate('wordSpacing', value)}
           onReset={() => onResetValue('wordSpacing')}
           defaultValue={DEFAULT_TYPOGRAPHY.wordSpacing}
+          recommendedValue={recommendations.wordSpacing}
+          onApplyRecommended={() => onUpdate('wordSpacing', recommendations.wordSpacing)}
           formatValue={(v) => v.toFixed(2)}
         />
 
@@ -128,6 +149,8 @@ export function TypographyControls({
           onChange={(value) => onUpdate('lineHeight', value)}
           onReset={() => onResetValue('lineHeight')}
           defaultValue={DEFAULT_TYPOGRAPHY.lineHeight}
+          recommendedValue={recommendations.lineHeight}
+          onApplyRecommended={() => onUpdate('lineHeight', recommendations.lineHeight)}
           formatValue={(v) => v.toFixed(2)}
         />
 
@@ -142,6 +165,8 @@ export function TypographyControls({
           onChange={(value) => onUpdate('paragraphWidth', value)}
           onReset={() => onResetValue('paragraphWidth')}
           defaultValue={DEFAULT_TYPOGRAPHY.paragraphWidth}
+          recommendedValue={recommendations.paragraphWidth}
+          onApplyRecommended={() => onUpdate('paragraphWidth', recommendations.paragraphWidth)}
         />
 
         {/* Text Alignment */}
