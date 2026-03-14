@@ -53,6 +53,7 @@ function LayerText({
     lineHeight: typography.lineHeight,
     maxWidth: `${typography.paragraphWidth}ch`,
     textAlign: typography.textAlign as React.CSSProperties['textAlign'],
+    color: typography.textColor,
   }), [typography, isFontLoaded]);
 
   return (
@@ -77,7 +78,7 @@ function LayerText({
       </div>
 
       <div
-        className="text-zinc-900 whitespace-pre-wrap break-words transition-all duration-150"
+        className="whitespace-pre-wrap break-words transition-all duration-150"
         style={textStyle}
       >
         {content}

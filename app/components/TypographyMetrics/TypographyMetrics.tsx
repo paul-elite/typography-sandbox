@@ -39,6 +39,7 @@ export function TypographyMetrics({
     { label: 'Line Height', value: typography.lineHeight.toFixed(2) },
     { label: 'Line Length', value: `${typography.paragraphWidth}ch` },
     { label: 'Alignment', value: typography.textAlign.charAt(0).toUpperCase() + typography.textAlign.slice(1) },
+    { label: 'Color', value: typography.textColor.toUpperCase(), color: typography.textColor },
   ];
 
   // Determine which segment is active (0-5)
@@ -66,9 +67,17 @@ export function TypographyMetrics({
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-2">
         {metrics.map((metric) => (
-          <div key={metric.label} className="flex justify-between items-baseline">
+          <div key={metric.label} className="flex justify-between items-center">
             <span className="text-xs text-zinc-400">{metric.label}</span>
-            <span className="text-xs text-zinc-700 font-mono font-medium">{metric.value}</span>
+            <span className="text-xs text-zinc-700 font-mono font-medium flex items-center gap-1.5">
+              {'color' in metric && metric.color && (
+                <span
+                  className="w-3 h-3 rounded-sm border border-zinc-200"
+                  style={{ backgroundColor: metric.color }}
+                />
+              )}
+              {metric.value}
+            </span>
           </div>
         ))}
       </div>

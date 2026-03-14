@@ -14,7 +14,7 @@ export function exportTypography(layerTypography: LayerTypography, format: Expor
 }
 
 function formatLayerCSS(typography: TypographyState, className: string): string {
-  const { fontFamily, fontSize, fontWeight, letterSpacing, wordSpacing, lineHeight, paragraphWidth, textAlign } = typography;
+  const { fontFamily, fontSize, fontWeight, letterSpacing, wordSpacing, lineHeight, paragraphWidth, textAlign, textColor } = typography;
 
   return `.${className} {
   font-family: '${fontFamily}', sans-serif;
@@ -25,6 +25,7 @@ function formatLayerCSS(typography: TypographyState, className: string): string 
   line-height: ${lineHeight};
   max-width: ${paragraphWidth}ch;
   text-align: ${textAlign};
+  color: ${textColor};
 }`;
 }
 
@@ -46,7 +47,8 @@ function exportAsCSS(layerTypography: LayerTypography): string {
   --${layer}-word-spacing: ${t.wordSpacing}em;
   --${layer}-line-height: ${t.lineHeight};
   --${layer}-paragraph-width: ${t.paragraphWidth}ch;
-  --${layer}-text-align: ${t.textAlign};`;
+  --${layer}-text-align: ${t.textAlign};
+  --${layer}-text-color: ${t.textColor};`;
   }).join('\n\n');
 
   return `${layerClasses}
@@ -65,6 +67,7 @@ function exportAsTailwind(layerTypography: LayerTypography): string {
   const letterSpacings: Record<string, string> = {};
   const lineHeights: Record<string, string> = {};
   const maxWidths: Record<string, string> = {};
+  const textColors: Record<string, string> = {};
 
   layers.forEach(layer => {
     const t = layerTypography[layer];
@@ -79,6 +82,7 @@ function exportAsTailwind(layerTypography: LayerTypography): string {
     letterSpacings[layer] = trackingValue;
     lineHeights[layer] = `${t.lineHeight}`;
     maxWidths[`prose-${layer}`] = `${t.paragraphWidth}ch`;
+    textColors[layer] = t.textColor;
   });
 
   return `// tailwind.config.js
@@ -90,6 +94,9 @@ module.exports = {
       letterSpacing: ${JSON.stringify(letterSpacings, null, 8).replace(/\n/g, '\n      ')},
       lineHeight: ${JSON.stringify(lineHeights, null, 8).replace(/\n/g, '\n      ')},
       maxWidth: ${JSON.stringify(maxWidths, null, 8).replace(/\n/g, '\n      ')},
+      colors: {
+        typography: ${JSON.stringify(textColors, null, 10).replace(/\n/g, '\n        ')},
+      },
     },
   },
 }
@@ -97,17 +104,17 @@ module.exports = {
 /* Usage examples:
 
 Heading:
-<h1 className="font-heading text-heading tracking-heading leading-heading max-w-prose-heading">
+<h1 className="font-heading text-heading tracking-heading leading-heading max-w-prose-heading text-typography-heading">
   Your heading here
 </h1>
 
 Paragraph:
-<p className="font-paragraph text-paragraph tracking-paragraph leading-paragraph max-w-prose-paragraph">
+<p className="font-paragraph text-paragraph tracking-paragraph leading-paragraph max-w-prose-paragraph text-typography-paragraph">
   Your text here
 </p>
 
 Caption:
-<span className="font-caption text-caption tracking-caption leading-caption max-w-prose-caption">
+<span className="font-caption text-caption tracking-caption leading-caption max-w-prose-caption text-typography-caption">
   Your caption here
 </span>
 */`;
@@ -152,6 +159,10 @@ function exportAsJSON(layerTypography: LayerTypography): string {
       textAlign: {
         value: t.textAlign,
         type: 'textAlign',
+      },
+      textColor: {
+        value: t.textColor,
+        type: 'color',
       },
     };
   });

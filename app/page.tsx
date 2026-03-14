@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useTypography } from './hooks/useTypography';
 import { useFontLoader } from './hooks/useFontLoader';
 import { useRecommendations, ActiveSlider } from './hooks/useRecommendations';
@@ -90,7 +91,12 @@ export default function Home() {
       <main className="max-w-[1800px] mx-auto p-6 h-[calc(100vh-73px)] flex flex-col">
         <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
           {/* Left Sidebar - Controls */}
-          <aside className="w-full lg:w-80 xl:w-96 flex-shrink-0 overflow-y-auto">
+          <motion.aside
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+            className="w-full lg:w-80 xl:w-96 flex-shrink-0 overflow-y-auto"
+          >
             <div className="space-y-4">
               <TypographyControls
                 typography={typography}
@@ -107,10 +113,15 @@ export default function Home() {
                 getFontWeights={getFontWeights}
               />
             </div>
-          </aside>
+          </motion.aside>
 
           {/* Center - Canvas */}
-          <section className="flex-1 min-h-0 flex flex-col">
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: 'easeInOut', delay: 0.1 }}
+            className="flex-1 min-h-0 flex flex-col"
+          >
             <TypographyCanvas
               layerTypography={layerTypography}
               selectedLayer={selectedLayer}
@@ -121,10 +132,15 @@ export default function Home() {
               guides={guides}
               isFontLoaded={isFontLoaded}
             />
-          </section>
+          </motion.section>
 
           {/* Right Sidebar - Options & Metrics */}
-          <aside className="w-full lg:w-72 xl:w-80 flex-shrink-0 overflow-y-auto">
+          <motion.aside
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: 'easeInOut', delay: 0.2 }}
+            className="w-full lg:w-72 xl:w-80 flex-shrink-0 overflow-y-auto"
+          >
             <div className="space-y-4">
               <PreviewModes
                 layout={layout}
@@ -144,7 +160,7 @@ export default function Home() {
                 comfortLevel={comfortLevel}
               />
             </div>
-          </aside>
+          </motion.aside>
         </div>
       </main>
 

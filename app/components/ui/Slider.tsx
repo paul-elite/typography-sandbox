@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useId, useMemo, useState } from 'react';
+import { motion } from 'framer-motion';
 
 interface SliderProps {
   label: string;

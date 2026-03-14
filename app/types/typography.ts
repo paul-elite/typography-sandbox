@@ -7,6 +7,7 @@ export interface TypographyState {
   lineHeight: number;
   paragraphWidth: number;
   textAlign: 'left' | 'center' | 'right' | 'justify';
+  textColor: string;
 }
 
 export interface FontOption {
@@ -79,6 +80,7 @@ export const DEFAULT_TYPOGRAPHY: TypographyState = {
   lineHeight: 1.5,
   paragraphWidth: 65,
   textAlign: 'left',
+  textColor: '#18181b',
 };
 
 // Default typography per layer
@@ -91,6 +93,7 @@ export const DEFAULT_HEADING_TYPOGRAPHY: TypographyState = {
   lineHeight: 1.2,
   paragraphWidth: 65,
   textAlign: 'left',
+  textColor: '#18181b',
 };
 
 export const DEFAULT_PARAGRAPH_TYPOGRAPHY: TypographyState = {
@@ -102,6 +105,7 @@ export const DEFAULT_PARAGRAPH_TYPOGRAPHY: TypographyState = {
   lineHeight: 1.6,
   paragraphWidth: 65,
   textAlign: 'left',
+  textColor: '#3f3f46',
 };
 
 export const DEFAULT_CAPTION_TYPOGRAPHY: TypographyState = {
@@ -113,6 +117,7 @@ export const DEFAULT_CAPTION_TYPOGRAPHY: TypographyState = {
   lineHeight: 1.4,
   paragraphWidth: 65,
   textAlign: 'left',
+  textColor: '#71717a',
 };
 
 export const DEFAULT_LAYOUT: LayoutSettings = {

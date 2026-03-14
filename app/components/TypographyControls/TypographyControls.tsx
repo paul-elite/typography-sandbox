@@ -12,6 +12,7 @@ import { Slider } from '../ui/Slider';
 import { FontSelector } from '../FontSelector/FontSelector';
 import { FontOption } from '../../types/typography';
 import { TypographyRecommendations, ActiveSlider } from '../../hooks/useRecommendations';
+import { motion } from 'framer-motion';
 import {
   AlignLeftLine, AlignCenterLine, AlignRightLine, AlignJustifyLine,
   AlignLeftFill, AlignCenterFill, AlignRightFill, AlignJustifyFill
@@ -226,7 +227,10 @@ export function TypographyControls({
           </label>
           <div className="flex gap-1">
             {TEXT_ALIGNMENTS.map((alignment) => (
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 key={alignment.value}
                 onClick={() => onUpdate('textAlign', alignment.value)}
                 title={alignment.label}
@@ -239,8 +243,53 @@ export function TypographyControls({
                 {alignment.value === 'center' && (typography.textAlign === 'center' ? <AlignCenterFill className="mx-auto" /> : <AlignCenterLine className="mx-auto" />)}
                 {alignment.value === 'right' && (typography.textAlign === 'right' ? <AlignRightFill className="mx-auto" /> : <AlignRightLine className="mx-auto" />)}
                 {alignment.value === 'justify' && (typography.textAlign === 'justify' ? <AlignJustifyFill className="mx-auto" /> : <AlignJustifyLine className="mx-auto" />)}
-              </button>
+              </motion.button>
             ))}
+          </div>
+        </div>
+
+        {/* Text Color */}
+        <div>
+          <label className="block text-sm font-medium text-zinc-700 mb-2">
+            Text Color
+          </label>
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <input
+                type="color"
+                value={typography.textColor}
+                onChange={(e) => onUpdate('textColor', e.target.value)}
+                className="w-10 h-10 rounded-lg border border-zinc-300 cursor-pointer bg-transparent p-0.5 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-md [&::-webkit-color-swatch]:border-none"
+              />
+            </div>
+            <input
+              type="text"
+              value={typography.textColor}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^#[0-9A-Fa-f]{0,6}$/.test(value) || value === '') {
+                  onUpdate('textColor', value || '#000000');
+                }
+              }}
+              onBlur={(e) => {
+                const value = e.target.value;
+                if (!/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                  onUpdate('textColor', defaultTypography.textColor);
+                }
+              }}
+              className="flex-1 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-900 font-mono uppercase outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6]"
+              placeholder="#000000"
+              maxLength={7}
+            />
+            {typography.textColor !== defaultTypography.textColor && (
+              <button
+                onClick={() => onUpdate('textColor', defaultTypography.textColor)}
+                className="text-xs text-zinc-500 hover:text-zinc-700 transition-colors px-2 py-1 rounded hover:bg-zinc-100"
+                title="Reset to default"
+              >
+                Reset
+              </button>
+            )}
           </div>
         </div>
       </div>
