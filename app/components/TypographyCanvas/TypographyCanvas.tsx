@@ -95,17 +95,20 @@ export function TypographyCanvas({
       {/* Canvas Container */}
       <div className="flex-1 flex items-center justify-center p-6 bg-zinc-100 rounded-xl overflow-auto border border-zinc-200">
         <div
-          className="bg-white rounded-lg shadow-lg transition-all duration-300 overflow-hidden border border-zinc-200"
+          className="rounded-lg shadow-lg transition-all duration-300 overflow-hidden border border-amber-200"
           style={{ width: `min(100%, ${viewportWidth}px)` }}
         >
           {/* Viewport Indicator */}
-          <div className="flex items-center justify-between px-4 py-2 bg-zinc-50 border-b border-zinc-200">
+          <div
+            className="flex items-center justify-between px-4 py-2 border-b border-amber-300"
+            style={{ backgroundColor: '#FBD152' }}
+          >
             <div className="flex items-center gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
-              <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+              <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+              <div className="w-2.5 h-2.5 rounded-full bg-amber-600" />
+              <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
             </div>
-            <span className="text-xs text-zinc-500 font-mono">
+            <span className="text-xs text-amber-800 font-mono">
               {viewportWidth}px
             </span>
           </div>
@@ -113,7 +116,10 @@ export function TypographyCanvas({
           {/* Text Content */}
           <div
             className="p-8 min-h-[200px] relative"
-            style={hasGuides ? combinedGuideStyle : undefined}
+            style={{
+              backgroundColor: '#FFF1D4',
+              ...(hasGuides ? combinedGuideStyle : {})
+            }}
           >
             <div
               className="text-zinc-900 whitespace-pre-wrap break-words mx-auto transition-all duration-150"
