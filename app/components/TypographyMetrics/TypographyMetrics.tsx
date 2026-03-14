@@ -64,7 +64,7 @@ export function TypographyMetrics({
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-zinc-400">Reading Comfort</span>
           <span
-            className="text-xs font-medium transition-colors duration-300"
+            className="text-xs font-bold transition-colors duration-300"
             style={{ color: activeColor.hex }}
           >
             {activeColor.label}
@@ -96,7 +96,7 @@ export function TypographyMetrics({
 
         <div className="flex justify-between mt-1.5">
           <span className="text-xs text-zinc-400">Poor</span>
-          <span className="text-xs text-zinc-600 font-mono font-medium">{readingComfort}%</span>
+          <span className="text-xs text-zinc-600 font-mono font-bold">{readingComfort}%</span>
           <span className="text-xs text-zinc-400">Excellent</span>
         </div>
       </div>
