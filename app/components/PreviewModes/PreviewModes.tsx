@@ -105,7 +105,7 @@ export function PreviewModes({
                 : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
                 }`}
             >
-              <span>
+              <span className="flex items-center justify-center w-5 h-5 [&>svg]:w-full [&>svg]:h-full">
                 {option.value === 'mobile' && (viewport === 'mobile' ? <CellphoneFill /> : <CellphoneLine />)}
                 {option.value === 'tablet' && (viewport === 'tablet' ? <PadFill /> : <PadLine />)}
                 {option.value === 'desktop' && (viewport === 'desktop' ? <ComputerFill /> : <ComputerLine />)}
