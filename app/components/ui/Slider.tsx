@@ -157,10 +157,10 @@ export function Slider({
           style={{
             background: recommendedZone
               ? `linear-gradient(to right, 
-                  ${percentage > recommendedZone.start ? activeColor : trackBgColor} 0%, 
+                  ${activeColor} 0%, 
                   ${activeColor} ${Math.min(percentage, recommendedZone.start)}%, 
-                  ${trackBgColor} ${Math.min(percentage, recommendedZone.start)}%,
-                  ${trackBgColor} ${recommendedZone.start}%, 
+                  ${percentage > recommendedZone.start ? activeColor : trackBgColor} ${Math.min(percentage, recommendedZone.start)}%, 
+                  ${percentage > recommendedZone.start ? activeColor : trackBgColor} ${recommendedZone.start}%, 
                   ${percentage > recommendedZone.start ? activeColor : recommendedColor} ${recommendedZone.start}%, 
                   ${percentage > recommendedZone.end ? activeColor : recommendedColor} ${Math.max(recommendedZone.start, Math.min(percentage, recommendedZone.end))}%, 
                   ${recommendedColor} ${Math.max(recommendedZone.start, Math.min(percentage, recommendedZone.end))}%, 
