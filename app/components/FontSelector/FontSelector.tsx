@@ -65,6 +65,7 @@ export function FontSelector({
     'sans-serif': 'Sans Serif',
     'serif': 'Serif',
     'monospace': 'Monospace',
+    'handwritten': 'Handwritten',
   };
 
   return (

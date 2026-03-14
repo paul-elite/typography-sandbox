@@ -164,4 +164,9 @@ export const POPULAR_FONTS: FontOption[] = [
   { family: 'JetBrains Mono', weights: [100, 200, 300, 400, 500, 600, 700, 800], category: 'monospace' },
   { family: 'Space Grotesk', weights: [300, 400, 500, 600, 700], category: 'sans-serif' },
   { family: 'DM Sans', weights: [100, 200, 300, 400, 500, 600, 700, 800, 900], category: 'sans-serif' },
+  { family: 'Gochi Hand', weights: [400], category: 'handwritten' },
+  { family: 'Caveat', weights: [400, 500, 600, 700], category: 'handwritten' },
+  { family: 'Pacifico', weights: [400], category: 'handwritten' },
+  { family: 'Kalam', weights: [300, 400, 700], category: 'handwritten' },
+  { family: 'Permanent Marker', weights: [400], category: 'handwritten' },
 ];
