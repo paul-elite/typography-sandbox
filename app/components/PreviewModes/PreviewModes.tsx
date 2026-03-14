@@ -44,7 +44,7 @@ export function PreviewModes({
 }: PreviewModesProps) {
   return (
     <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-5 shadow-sm">
-      <h2 className="text-sm font-semibold text-zinc-800 uppercase tracking-wider">
+      <h2 className="text-sm font-semibold text-zinc-800">
         Preview Options
       </h2>
 

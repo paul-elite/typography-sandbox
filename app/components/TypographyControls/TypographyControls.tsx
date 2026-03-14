@@ -36,7 +36,7 @@ export function TypographyControls({
   return (
     <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-6 shadow-sm">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-zinc-800 uppercase tracking-wider">
+        <h2 className="text-sm font-semibold text-zinc-800">
           Typography Controls
         </h2>
         <button

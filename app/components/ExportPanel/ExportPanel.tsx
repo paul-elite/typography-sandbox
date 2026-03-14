@@ -48,7 +48,7 @@ export function ExportPanel({ typography }: ExportPanelProps) {
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full flex items-center justify-between p-5 hover:bg-zinc-50 transition-colors"
       >
-        <h2 className="text-sm font-semibold text-zinc-800 uppercase tracking-wider">
+        <h2 className="text-sm font-semibold text-zinc-800">
           Export Typography
         </h2>
         <svg

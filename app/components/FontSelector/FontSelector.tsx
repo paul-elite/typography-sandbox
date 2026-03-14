@@ -130,7 +130,7 @@ export function FontSelector({
           <div className="max-h-64 overflow-y-auto">
             {Object.entries(groupedFonts).map(([category, categoryFonts]) => (
               <div key={category}>
-                <div className="px-3 py-1.5 text-xs font-semibold text-zinc-500 uppercase tracking-wider bg-zinc-50">
+                <div className="px-3 py-1.5 text-xs font-semibold text-zinc-500 bg-zinc-50">
                   {categoryLabels[category] || category}
                 </div>
                 {categoryFonts.map((font) => (

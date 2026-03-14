@@ -47,7 +47,7 @@ export function TypographyMetrics({
 
   return (
     <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-4 shadow-sm">
-      <h2 className="text-sm font-semibold text-zinc-800 uppercase tracking-wider">
+      <h2 className="text-sm font-semibold text-zinc-800">
         Typography Metrics
       </h2>
 
