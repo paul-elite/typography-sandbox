@@ -149,10 +149,10 @@ export function TypographyCanvas({
   }, [layout.alignment]);
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-h-0">
       {/* Guide Legend */}
       {hasGuides && (
-        <div className="flex items-center gap-4 mb-3 px-4">
+        <div className="flex items-center gap-4 mb-3 px-4 flex-shrink-0">
           {guides.baselineGrid && (
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-0.5 bg-blue-500 rounded" />
@@ -175,7 +175,7 @@ export function TypographyCanvas({
       )}
 
       {/* Canvas Container */}
-      <div className="flex-1 flex items-center justify-center p-6 rounded-xl overflow-auto">
+      <div className="flex-1 flex items-start justify-center p-6 rounded-xl overflow-auto min-h-0">
         <div
           className="rounded-lg shadow-lg transition-all duration-300 overflow-hidden border border-amber-200"
           style={{ width: `min(100%, ${viewportWidth}px)` }}

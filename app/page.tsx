@@ -87,28 +87,30 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[1800px] mx-auto p-6">
-        <div className="flex flex-col lg:flex-row gap-6">
+      <main className="max-w-[1800px] mx-auto p-6 h-[calc(100vh-73px)] flex flex-col">
+        <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
           {/* Left Sidebar - Controls */}
-          <aside className="w-full lg:w-80 xl:w-96 space-y-4 flex-shrink-0">
-            <TypographyControls
-              typography={typography}
-              selectedLayer={selectedLayer}
-              onSelectLayer={setSelectedLayer}
-              recommendations={recommendations}
-              onUpdate={updateTypography}
-              onResetAll={resetTypography}
-              onActiveSliderChange={setActiveSlider}
-              fonts={fonts}
-              loadFont={loadFont}
-              loadingFont={loadingFont}
-              isFontLoaded={isFontLoaded}
-              getFontWeights={getFontWeights}
-            />
+          <aside className="w-full lg:w-80 xl:w-96 flex-shrink-0 overflow-y-auto">
+            <div className="space-y-4">
+              <TypographyControls
+                typography={typography}
+                selectedLayer={selectedLayer}
+                onSelectLayer={setSelectedLayer}
+                recommendations={recommendations}
+                onUpdate={updateTypography}
+                onResetAll={resetTypography}
+                onActiveSliderChange={setActiveSlider}
+                fonts={fonts}
+                loadFont={loadFont}
+                loadingFont={loadingFont}
+                isFontLoaded={isFontLoaded}
+                getFontWeights={getFontWeights}
+              />
+            </div>
           </aside>
 
           {/* Center - Canvas */}
-          <section className="flex-1 min-h-[500px] flex flex-col">
+          <section className="flex-1 min-h-0 flex flex-col">
             <TypographyCanvas
               layerTypography={layerTypography}
               selectedLayer={selectedLayer}
@@ -122,36 +124,29 @@ export default function Home() {
           </section>
 
           {/* Right Sidebar - Options & Metrics */}
-          <aside className="w-full lg:w-72 xl:w-80 space-y-4 flex-shrink-0">
-            <PreviewModes
-              layout={layout}
-              onLayoutChange={updateLayout}
-              layerContent={layerContent}
-              onLayerContentChange={updateLayerContent}
-              viewport={viewport}
-              onViewportChange={setViewport}
-              guides={guides}
-              onToggleGuide={toggleGuide}
-            />
+          <aside className="w-full lg:w-72 xl:w-80 flex-shrink-0 overflow-y-auto">
+            <div className="space-y-4">
+              <PreviewModes
+                layout={layout}
+                onLayoutChange={updateLayout}
+                layerContent={layerContent}
+                onLayerContentChange={updateLayerContent}
+                viewport={viewport}
+                onViewportChange={setViewport}
+                guides={guides}
+                onToggleGuide={toggleGuide}
+              />
 
-            <TypographyMetrics
-              typography={typography}
-              selectedLayer={selectedLayer}
-              readingComfort={readingComfort}
-              comfortLevel={comfortLevel}
-            />
+              <TypographyMetrics
+                typography={typography}
+                selectedLayer={selectedLayer}
+                readingComfort={readingComfort}
+                comfortLevel={comfortLevel}
+              />
+            </div>
           </aside>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="border-t border-zinc-200 mt-12 bg-white">
-        <div className="max-w-[1800px] mx-auto px-6 py-4">
-          <p className="text-xs text-zinc-500 text-center">
-            Design Tales © 2026
-          </p>
-        </div>
-      </footer>
 
       {/* Export Modal */}
       <ExportModal
