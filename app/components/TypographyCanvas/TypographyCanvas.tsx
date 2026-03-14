@@ -211,7 +211,7 @@ export function TypographyCanvas({
           <div
             className="min-h-[200px] relative flex flex-col"
             style={{
-              backgroundColor: '#FFF1D4',
+              backgroundColor: layout.backgroundColor,
               padding: `${layout.padding}px`,
               ...(hasGuides ? combinedGuideStyle : {}),
               ...alignmentStyle,

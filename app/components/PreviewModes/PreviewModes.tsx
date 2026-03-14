@@ -11,6 +11,7 @@ import {
   DEFAULT_LAYER_CONTENT,
 } from '../../types/typography';
 import { Slider } from '../ui/Slider';
+import { ColorPicker } from '../ui/ColorPicker';
 
 import {
   CellphoneLine, PadLine, ComputerLine,
@@ -166,6 +167,18 @@ export function PreviewModes({
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Background Color */}
+          <div>
+            <label className="block text-xs text-zinc-500 mb-2">
+              Background Color
+            </label>
+            <ColorPicker
+              value={layout.backgroundColor}
+              onChange={(color) => onLayoutChange('backgroundColor', color)}
+              defaultValue="#FFF1D4"
+            />
           </div>
         </div>
       </CollapsibleSection>

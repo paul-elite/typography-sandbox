@@ -15,10 +15,11 @@ export interface TypographyRecommendations {
 export type ActiveSlider = keyof TypographyRecommendations | null;
 
 export function useRecommendations(
-  typography: TypographyState,
+  typography: TypographyState | null,
   activeSlider: ActiveSlider
-): TypographyRecommendations {
+): TypographyRecommendations | null {
   return useMemo(() => {
+    if (!typography) return null;
     const { fontSize, fontWeight, letterSpacing, lineHeight, paragraphWidth, wordSpacing, textAlign } = typography;
 
     // ============================================

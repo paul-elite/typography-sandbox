@@ -32,6 +32,7 @@ export interface LayoutSettings {
   paragraphCaptionGap: number;  // Gap between paragraph and caption (px)
   padding: number;              // Container padding (px)
   alignment: 'start' | 'center' | 'stretch';  // Cross-axis alignment
+  backgroundColor: string;      // Background color of the notepad
 }
 
 // Default text content for each layer
@@ -125,6 +126,7 @@ export const DEFAULT_LAYOUT: LayoutSettings = {
   paragraphCaptionGap: 24,
   padding: 32,
   alignment: 'start',
+  backgroundColor: '#FFF1D4',
 };
 
 export const FONT_WEIGHTS = [100, 200, 300, 400, 500, 600, 700, 800, 900];
