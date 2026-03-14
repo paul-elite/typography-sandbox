@@ -139,8 +139,8 @@ export function PreviewModes({
                   className="sr-only"
                 />
                 <div
-                  className={`w-4 h-4 rounded border-2 transition-colors ${guides[guide.value]
-                    ? 'bg-blue-500 border-blue-500'
+                  className={`w-4 h-4 rounded border transition-colors ${guides[guide.value]
+                    ? 'bg-black border-black'
                     : 'bg-white border-zinc-300 group-hover:border-zinc-400'
                     }`}
                 >
@@ -157,7 +157,7 @@ export function PreviewModes({
                   )}
                 </div>
               </div>
-              <span className="text-sm text-zinc-600 group-hover:text-zinc-800">
+              <span className={`text-sm transition-colors group-hover:text-zinc-800 ${guides[guide.value] ? 'font-medium text-black' : 'text-zinc-600'}`}>
                 {guide.label}
               </span>
             </label>
