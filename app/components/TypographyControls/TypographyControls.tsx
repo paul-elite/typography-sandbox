@@ -38,7 +38,7 @@ export function TypographyControls({
   const availableWeights = getFontWeights(typography.fontFamily);
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-6 shadow-sm">
+    <div className="bg-white rounded-xl p-5 space-y-6 shadow-[0px_0px_0px_0.5px_rgba(0,0,0,0.1)]">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold text-zinc-800">
           Typography Controls
@@ -73,8 +73,8 @@ export function TypographyControls({
                 key={weight}
                 onClick={() => onUpdate('fontWeight', weight)}
                 className={`px-2.5 py-1.5 text-xs rounded-md transition-colors ${typography.fontWeight === weight
-                    ? 'bg-zinc-900 text-white font-medium'
-                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
+                  ? 'bg-zinc-900 text-white font-medium'
+                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
                   }`}
               >
                 {weight}
@@ -177,8 +177,8 @@ export function TypographyControls({
                 onClick={() => onUpdate('textAlign', alignment.value)}
                 title={alignment.label}
                 className={`flex-1 py-2 text-lg rounded-md transition-colors ${typography.textAlign === alignment.value
-                    ? 'bg-zinc-900 text-white'
-                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
+                  ? 'bg-zinc-900 text-white'
+                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
                   }`}
               >
                 {alignment.value === 'left' && (typography.textAlign === 'left' ? <AlignLeftFill className="mx-auto" /> : <AlignLeftLine className="mx-auto" />)}

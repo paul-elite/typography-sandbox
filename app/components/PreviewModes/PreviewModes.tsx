@@ -48,7 +48,7 @@ export function PreviewModes({
   onToggleGuide,
 }: PreviewModesProps) {
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-5 shadow-sm">
+    <div className="bg-white rounded-xl p-5 space-y-5 shadow-[0px_0px_0px_0.5px_rgba(0,0,0,0.1)]">
       <h2 className="text-sm font-semibold text-zinc-800">
         Preview Options
       </h2>

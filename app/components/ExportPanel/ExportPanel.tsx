@@ -43,7 +43,7 @@ export function ExportPanel({ typography }: ExportPanelProps) {
   }, [exportedCode, activeFormat]);
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
+    <div className="bg-white rounded-xl overflow-hidden shadow-[0px_0px_0px_0.5px_rgba(0,0,0,0.1)]">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full flex items-center justify-between p-5 hover:bg-zinc-50 transition-colors"
@@ -69,11 +69,10 @@ export function ExportPanel({ typography }: ExportPanelProps) {
               <button
                 key={format.value}
                 onClick={() => setActiveFormat(format.value)}
-                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-md transition-colors ${
-                  activeFormat === format.value
+                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-md transition-colors ${activeFormat === format.value
                     ? 'bg-zinc-900 text-white font-medium'
                     : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
-                }`}
+                  }`}
               >
                 <span>{format.icon}</span>
                 <span>{format.label}</span>
@@ -91,11 +90,10 @@ export function ExportPanel({ typography }: ExportPanelProps) {
             <div className="absolute top-2 right-2 flex gap-1">
               <button
                 onClick={handleCopy}
-                className={`p-1.5 rounded transition-colors ${
-                  copied
+                className={`p-1.5 rounded transition-colors ${copied
                     ? 'bg-green-500/20 text-green-400'
                     : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300'
-                }`}
+                  }`}
                 title={copied ? 'Copied!' : 'Copy to clipboard'}
               >
                 {copied ? (

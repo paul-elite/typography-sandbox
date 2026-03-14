@@ -46,7 +46,7 @@ export function TypographyMetrics({
   const activeColor = COMFORT_COLORS[activeSegment];
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-4 shadow-sm">
+    <div className="bg-white rounded-xl p-5 space-y-4 shadow-[0px_0px_0px_0.5px_rgba(0,0,0,0.1)]">
       <h2 className="text-sm font-semibold text-zinc-800">
         Typography Metrics
       </h2>
@@ -86,8 +86,8 @@ export function TypographyMetrics({
                   borderRadius: isFirst
                     ? '6px 0 0 6px'
                     : isLast
-                    ? '0 6px 6px 0'
-                    : '0',
+                      ? '0 6px 6px 0'
+                      : '0',
                 }}
               />
             );
