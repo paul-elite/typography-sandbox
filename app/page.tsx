@@ -49,9 +49,11 @@ export default function Home() {
       <header className="border-b border-zinc-200 bg-white">
         <div className="max-w-[1800px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-zinc-700 to-zinc-900 rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm font-bold">Ty</span>
-            </div>
+            <img
+              src="/logo.png"
+              alt="Design Tales Logo"
+              className="h-10 w-auto object-contain"
+            />
             <div>
               <h1 className="text-lg font-semibold text-zinc-900">Typography Sandbox</h1>
               <p className="text-xs text-zinc-500">Experiment with typography variables in real-time</p>
