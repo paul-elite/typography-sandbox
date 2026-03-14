@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useId, useMemo } from 'react';
+import { useCallback, useId, useMemo, useState } from 'react';
 
 interface SliderProps {
   label: string;
@@ -32,6 +32,7 @@ export function Slider({
   onApplyRecommended,
 }: SliderProps) {
   const id = useId();
+  const [isSliding, setIsSliding] = useState(false);
   const displayValue = formatValue ? formatValue(value) : value.toString();
   const isDefault = defaultValue !== undefined && value === defaultValue;
   const isAtRecommended = recommendedValue !== undefined && Math.abs(value - recommendedValue) < step;
@@ -56,6 +57,14 @@ export function Slider({
     onChange(newValue);
   }, [onChange, min, max, defaultValue]);
 
+  const handlePointerDown = useCallback(() => {
+    setIsSliding(true);
+  }, []);
+
+  const handlePointerUp = useCallback(() => {
+    setIsSliding(false);
+  }, []);
+
   // Calculate percentages for slider gradient and recommended marker
   const percentage = ((value - min) / (max - min)) * 100;
 
@@ -64,6 +73,10 @@ export function Slider({
     const clamped = Math.max(min, Math.min(max, recommendedValue));
     return ((clamped - min) / (max - min)) * 100;
   }, [recommendedValue, min, max]);
+
+  // Colors for active range
+  const activeColor = isSliding ? '#3b82f6' : '#a1a1aa'; // blue-500 when sliding, zinc-400 otherwise
+  const thumbBorderColor = isSliding ? '#3b82f6' : '#a1a1aa';
 
   return (
     <div className="space-y-2">
@@ -137,9 +150,15 @@ export function Slider({
           max={max}
           step={step}
           onChange={handleSliderChange}
-          className="w-full h-1.5 rounded-full appearance-none cursor-pointer slider-track relative z-10"
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUp}
+          onPointerLeave={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          className={`w-full h-1.5 rounded-full appearance-none cursor-pointer relative z-10 transition-all duration-150 ${
+            isSliding ? 'slider-track-active' : 'slider-track'
+          }`}
           style={{
-            background: `linear-gradient(to right, #a1a1aa 0%, #a1a1aa ${percentage}%, #3f3f46 ${percentage}%, #3f3f46 100%)`,
+            background: `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${percentage}%, #3f3f46 ${percentage}%, #3f3f46 100%)`,
           }}
         />
       </div>
@@ -152,7 +171,7 @@ export function Slider({
           border-radius: 50%;
           background: #fafafa;
           cursor: pointer;
-          border: 2px solid #a1a1aa;
+          border: 2px solid ${thumbBorderColor};
           transition: all 0.15s ease;
           position: relative;
           z-index: 20;
@@ -167,7 +186,7 @@ export function Slider({
           border-radius: 50%;
           background: #fafafa;
           cursor: pointer;
-          border: 2px solid #a1a1aa;
+          border: 2px solid ${thumbBorderColor};
           transition: all 0.15s ease;
           position: relative;
           z-index: 20;
@@ -175,6 +194,31 @@ export function Slider({
         .slider-track::-moz-range-thumb:hover {
           transform: scale(1.1);
           border-color: #fafafa;
+        }
+        .slider-track-active::-webkit-slider-thumb {
+          appearance: none;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #fafafa;
+          cursor: pointer;
+          border: 2px solid #3b82f6;
+          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+          transition: all 0.15s ease;
+          position: relative;
+          z-index: 20;
+        }
+        .slider-track-active::-moz-range-thumb {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #fafafa;
+          cursor: pointer;
+          border: 2px solid #3b82f6;
+          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+          transition: all 0.15s ease;
+          position: relative;
+          z-index: 20;
         }
       `}</style>
     </div>
