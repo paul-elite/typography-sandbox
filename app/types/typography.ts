@@ -62,6 +62,15 @@ export interface TypographyGuides {
   xHeight: boolean;
 }
 
+export interface TextHolderInstance {
+  id: string;
+  x: number;
+  y: number;
+  layerTypography: LayerTypography;
+  layout: LayoutSettings;
+  layerContent: LayerContent;
+}
+
 export interface ViewportDimensions {
   width: number;
   label: string;

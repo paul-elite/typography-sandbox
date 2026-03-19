@@ -7,6 +7,7 @@ import {
   LayerTypography,
   LayoutSettings,
   LayerContent,
+  TextHolderInstance,
   DEFAULT_HEADING_TYPOGRAPHY,
   DEFAULT_PARAGRAPH_TYPOGRAPHY,
   DEFAULT_CAPTION_TYPOGRAPHY,
@@ -24,10 +25,18 @@ const DEFAULT_LAYER_TYPOGRAPHY: LayerTypography = {
 };
 
 export function useTypography() {
-  const [layerTypography, setLayerTypography] = useState<LayerTypography>(DEFAULT_LAYER_TYPOGRAPHY);
+  const [instances, setInstances] = useState<TextHolderInstance[]>([
+    {
+      id: 'default-1',
+      x: 40,
+      y: 40,
+      layerTypography: DEFAULT_LAYER_TYPOGRAPHY,
+      layout: DEFAULT_LAYOUT,
+      layerContent: { ...DEFAULT_LAYER_CONTENT },
+    }
+  ]);
+  const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>('default-1');
   const [selectedLayer, setSelectedLayer] = useState<TextLayer | null>('paragraph');
-  const [layout, setLayout] = useState<LayoutSettings>(DEFAULT_LAYOUT);
-  const [layerContent, setLayerContent] = useState<LayerContent>({ ...DEFAULT_LAYER_CONTENT });
   const [viewport, setViewport] = useState<ViewportPreset>('desktop');
   const [customViewportWidth, setCustomViewportWidth] = useState<number>(VIEWPORT_PRESETS.desktop.width);
   const [guides, setGuides] = useState<TypographyGuides>({
@@ -36,57 +45,137 @@ export function useTypography() {
     xHeight: false,
   });
 
+  const activeInstance = useMemo(() => {
+    return instances.find(inst => inst.id === selectedInstanceId) || null;
+  }, [instances, selectedInstanceId]);
+
+  // Derived state to mimic the old return signature but scoped to the active instance
+  const layerTypography = activeInstance?.layerTypography || DEFAULT_LAYER_TYPOGRAPHY;
+  const layout = activeInstance?.layout || DEFAULT_LAYOUT;
+  const layerContent = activeInstance?.layerContent || DEFAULT_LAYER_CONTENT;
+
   // Get the current layer's typography for convenience (default to paragraph if none selected)
   const typography = selectedLayer ? layerTypography[selectedLayer] : null;
+
+  const addInstance = useCallback((x: number, y: number) => {
+    setInstances(prev => {
+      if (prev.length >= 5) return prev;
+      
+      const source = prev.find(i => i.id === selectedInstanceId) || prev[prev.length - 1] || {
+        layerTypography: DEFAULT_LAYER_TYPOGRAPHY,
+        layout: DEFAULT_LAYOUT,
+        layerContent: DEFAULT_LAYER_CONTENT,
+      };
+
+      const newId = `instance-${Date.now()}`;
+      const newInstance: TextHolderInstance = {
+        id: newId,
+        x,
+        y,
+        // Deep clone to prevent reference sharing
+        layerTypography: JSON.parse(JSON.stringify(source.layerTypography)),
+        layout: { ...source.layout },
+        layerContent: { ...source.layerContent },
+      };
+
+      setSelectedInstanceId(newId);
+      return [...prev, newInstance];
+    });
+  }, [selectedInstanceId]);
+
+  const removeInstance = useCallback((id: string) => {
+    setInstances(prev => {
+      const next = prev.filter(inst => inst.id !== id);
+      if (selectedInstanceId === id) {
+        setSelectedInstanceId(next.length > 0 ? next[next.length - 1].id : null);
+      }
+      return next;
+    });
+  }, [selectedInstanceId]);
+
+  const updateInstancePosition = useCallback((id: string, x: number, y: number) => {
+    setInstances(prev => prev.map(inst => inst.id === id ? { ...inst, x, y } : inst));
+  }, []);
 
   const updateTypography = useCallback(<K extends keyof TypographyState>(
     key: K,
     value: TypographyState[K]
   ) => {
-    if (!selectedLayer) return;
-    setLayerTypography(prev => ({
-      ...prev,
-      [selectedLayer]: { ...prev[selectedLayer], [key]: value }
+    if (!selectedLayer || !selectedInstanceId) return;
+    setInstances(prev => prev.map(inst => {
+      if (inst.id !== selectedInstanceId) return inst;
+      return {
+        ...inst,
+        layerTypography: {
+          ...inst.layerTypography,
+          [selectedLayer]: { ...inst.layerTypography[selectedLayer], [key]: value }
+        }
+      };
     }));
-  }, [selectedLayer]);
+  }, [selectedLayer, selectedInstanceId]);
 
   const resetTypography = useCallback(() => {
-    if (!selectedLayer) return;
-    // Reset only the selected layer
+    if (!selectedLayer || !selectedInstanceId) return;
     const defaults: Record<TextLayer, TypographyState> = {
       heading: DEFAULT_HEADING_TYPOGRAPHY,
       paragraph: DEFAULT_PARAGRAPH_TYPOGRAPHY,
       caption: DEFAULT_CAPTION_TYPOGRAPHY,
     };
-    setLayerTypography(prev => ({
-      ...prev,
-      [selectedLayer]: defaults[selectedLayer]
+    setInstances(prev => prev.map(inst => {
+      if (inst.id !== selectedInstanceId) return inst;
+      return {
+        ...inst,
+        layerTypography: {
+          ...inst.layerTypography,
+          [selectedLayer]: defaults[selectedLayer]
+        }
+      };
     }));
-  }, [selectedLayer]);
+  }, [selectedLayer, selectedInstanceId]);
 
   const resetSingleValue = useCallback(<K extends keyof TypographyState>(key: K) => {
-    if (!selectedLayer) return;
+    if (!selectedLayer || !selectedInstanceId) return;
     const defaults: Record<TextLayer, TypographyState> = {
       heading: DEFAULT_HEADING_TYPOGRAPHY,
       paragraph: DEFAULT_PARAGRAPH_TYPOGRAPHY,
       caption: DEFAULT_CAPTION_TYPOGRAPHY,
     };
-    setLayerTypography(prev => ({
-      ...prev,
-      [selectedLayer]: { ...prev[selectedLayer], [key]: defaults[selectedLayer][key] }
+    setInstances(prev => prev.map(inst => {
+      if (inst.id !== selectedInstanceId) return inst;
+      return {
+        ...inst,
+        layerTypography: {
+          ...inst.layerTypography,
+          [selectedLayer]: { ...inst.layerTypography[selectedLayer], [key]: defaults[selectedLayer][key] }
+        }
+      };
     }));
-  }, [selectedLayer]);
+  }, [selectedLayer, selectedInstanceId]);
 
   const updateLayout = useCallback(<K extends keyof LayoutSettings>(
     key: K,
     value: LayoutSettings[K]
   ) => {
-    setLayout(prev => ({ ...prev, [key]: value }));
-  }, []);
+    if (!selectedInstanceId) return;
+    setInstances(prev => prev.map(inst => {
+      if (inst.id !== selectedInstanceId) return inst;
+      return {
+        ...inst,
+        layout: { ...inst.layout, [key]: value }
+      };
+    }));
+  }, [selectedInstanceId]);
 
   const updateLayerContent = useCallback((layer: TextLayer, content: string) => {
-    setLayerContent(prev => ({ ...prev, [layer]: content }));
-  }, []);
+    if (!selectedInstanceId) return;
+    setInstances(prev => prev.map(inst => {
+      if (inst.id !== selectedInstanceId) return inst;
+      return {
+        ...inst,
+        layerContent: { ...inst.layerContent, [layer]: content }
+      };
+    }));
+  }, [selectedInstanceId]);
 
   const toggleGuide = useCallback((guide: keyof TypographyGuides) => {
     setGuides(prev => ({ ...prev, [guide]: !prev[guide] }));
@@ -156,15 +245,20 @@ export function useTypography() {
   }, [readingComfort]);
 
   return {
-    // Multi-layer state
+    instances,
+    selectedInstanceId,
+    setSelectedInstanceId,
+    addInstance,
+    removeInstance,
+    updateInstancePosition,
+    // Active instance state exposed directly for compatibility
     layerTypography,
-    selectedLayer,
-    setSelectedLayer,
     layout,
     updateLayout,
     layerContent,
     updateLayerContent,
-    // Current layer's typography (for convenience)
+    selectedLayer,
+    setSelectedLayer,
     typography,
     updateTypography,
     resetTypography,

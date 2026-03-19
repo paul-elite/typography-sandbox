@@ -18,14 +18,20 @@ export default function Home() {
   const [isExportOpen, setIsExportOpen] = useState(false);
 
   const {
+    instances,
+    selectedInstanceId,
+    setSelectedInstanceId,
+    addInstance,
+    removeInstance,
+    updateInstancePosition,
     // Multi-layer state
     layerTypography,
-    selectedLayer,
-    setSelectedLayer,
     layout,
     updateLayout,
     layerContent,
     updateLayerContent,
+    selectedLayer,
+    setSelectedLayer,
     // Current layer's typography
     typography,
     updateTypography,
@@ -124,13 +130,16 @@ export default function Home() {
             className="flex-1 min-h-0 flex flex-col"
           >
             <TypographyCanvas
-              layerTypography={layerTypography}
+              instances={instances}
+              selectedInstanceId={selectedInstanceId}
+              onSelectInstance={setSelectedInstanceId}
+              onAddInstance={addInstance}
+              onRemoveInstance={removeInstance}
+              onUpdateInstancePosition={updateInstancePosition}
               selectedLayer={selectedLayer}
               onSelectLayer={setSelectedLayer}
               onTypographyChange={updateTypography}
-              layout={layout}
               onLayoutChange={updateLayout}
-              layerContent={layerContent}
               viewport={viewport}
               customViewportWidth={customViewportWidth}
               onCustomViewportWidthChange={(w) => {
