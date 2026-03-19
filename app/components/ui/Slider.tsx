@@ -36,7 +36,9 @@ export function Slider({
 }: SliderProps) {
   const id = useId();
   const [isSliding, setIsSliding] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const displayValue = formatValue ? formatValue(value) : value.toString();
+  const isTextFormat = isNaN(Number(displayValue));
   const isAtRecommended = recommendedValue !== undefined && value >= recommendedValue[0] && value <= recommendedValue[1];
 
   const handleSliderChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,12 +47,13 @@ export function Slider({
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseFloat(e.target.value);
-    if (!isNaN(newValue) && newValue >= min && newValue <= max) {
+    if (!isNaN(newValue)) {
       onChange(newValue);
     }
-  }, [onChange, min, max]);
+  }, [onChange]);
 
   const handleInputBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(false);
     let newValue = parseFloat(e.target.value);
     if (isNaN(newValue)) {
       newValue = defaultValue ?? min;
@@ -92,14 +95,15 @@ export function Slider({
         <div className="flex items-center gap-2">
           <div className="flex items-center">
             <input
-              type="number"
-              value={displayValue}
+              type={isTextFormat && !isFocused ? 'text' : 'number'}
+              value={isFocused ? value : displayValue}
               onChange={handleInputChange}
+              onFocus={() => setIsFocused(true)}
               onBlur={handleInputBlur}
               min={min}
               max={max}
               step={step}
-              className="w-16 px-2 py-1 text-xs text-right bg-white border-[1px] border-zinc-300 rounded text-zinc-800 outline-none focus:outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className={`${isTextFormat && !isFocused ? 'w-24' : 'w-16'} px-2 py-1 text-xs text-right bg-white border-[1px] border-zinc-300 rounded text-zinc-800 outline-none focus:outline-none focus:border-transparent focus:shadow-[0_0_0_1px_#3b82f6] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
               style={{ outline: 'none' }}
             />
             {unit && <span className="ml-1 text-xs text-zinc-500">{unit}</span>}

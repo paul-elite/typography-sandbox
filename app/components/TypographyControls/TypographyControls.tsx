@@ -131,6 +131,20 @@ export function TypographyControls({
             }}
             onSlideStart={() => onActiveSliderChange('fontWeight')}
             onSlideEnd={() => onActiveSliderChange(null)}
+            formatValue={(v) => {
+              const weights: Record<number, string> = {
+                100: 'Thin',
+                200: 'Extra Light',
+                300: 'Light',
+                400: 'Regular',
+                500: 'Medium',
+                600: 'Semi Bold',
+                700: 'Bold',
+                800: 'Extra Bold',
+                900: 'Black',
+              };
+              return weights[v] || v.toString();
+            }}
           />
 
           {/* Font Size */}
