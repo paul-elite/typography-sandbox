@@ -18,6 +18,10 @@ body {
   font-family: var(--font-sans);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
   width: 8px;
@@ -46,7 +50,7 @@ body {
 
 /* Selection styles */
 ::selection {
-  background: rgba(59, 130, 246, 0.2);
+  background: rgba(24, 191, 123, 0.24);
 }
 
 /* Focus styles */
