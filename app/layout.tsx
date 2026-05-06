@@ -4,9 +4,9 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Borderless - Lagos Investor Summit",
-  description: "A premium Lagos event connecting African founders, operators, and global investors.",
-  keywords: ["Borderless", "Lagos", "African startups", "investors", "founders", "summit"],
+  title: "Typography Sandbox",
+  description: "Experiment with typography variables like tracking, kerning, line height, and font size in real-time",
+  keywords: ["typography", "design", "fonts", "CSS", "web design", "sandbox"],
 };
 
 export default function RootLayout({
